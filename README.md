@@ -1,6 +1,6 @@
 # FsFirestore 
 
-[![pipeline status](https://gitlab.com/mrbandler/FsFirestore/badges/master/pipeline.svg)](https://gitlab.com/mrbandler/FsFirestore/commits/master)
+[![pipeline status](https://gitlab.com/mrbandler/FsFirestore/badges/master/pipeline.svg)](https://gitlab.com/mrbandler/FsFirestore/commits/master) [![NuGet Badge](https://buildstats.info/nuget/FsFirestore?includePreReleases=true)](https://www.nuget.org/packages/FsFirestore)
 
 **Functional F# library to access Firestore database via Google Cloud Platform (GCP) or Firebase Project.**
 
@@ -11,25 +11,15 @@
 4. [Buy me a coffee](#4-buy-me-a-coffee) ☕
 5. [License](#5-license) 📃
 
-----
-
-## 1. Installation
-
-
-
 ---
 
 ## 2. Usage
 
 Please check the [wiki](https://github.com/mrbandler/FsFirestore/wiki) for documentation and in depth usage description.
 
----
-
 ## 3. Bugs and Features
 
 Please open a issue when you encounter any bugs 🐞 or have an idea for a new feature 💡.
-
----
 
 ## 4. Buy me a coffee
 
