@@ -1,0 +1,38 @@
+##############################################################
+# Build that shit.
+##############################################################
+build:
+  stage: build
+  image: microsoft/dotnet:latest
+  script:
+    - dotnet restore
+    - dotnet build -c Release
+    - cd FsFirestore
+    - dotnet pack -c Release -o ../package
+  artifacts:
+    paths:
+      - ./package
+
+##############################################################
+# Tests will be run on any pipeline build.
+##############################################################
+test/unit-testing:
+  stage: test
+  image: microsoft/dotnet:latest
+  script:
+    - echo $GCP > ./GCP.json
+    - dotnet restore
+    - dotnet build
+    - cd FsFirestore.Test
+    - dotnet test
+
+##############################################################
+# Deployment.
+##############################################################
+deploy/nuget:
+  stage: deploy
+  image: microsoft/dotnet:latest
+  only:
+    - master
+  script:
+    dotnet nuget push ./package/*.nupkg -k $NUGET_API_KEY -s nuget.org
