@@ -23,7 +23,7 @@ test/unit-testing:
     - echo $GCP > ./GCP.json
     - dotnet restore
     - dotnet build
-    - cd FsFirestore.Test
+    - cd FsFirestore.Tests
     - dotnet test
 
 ##############################################################

@@ -1,4 +1,7 @@
-# FsFirestore
+# FsFirestore 
+
+[![pipeline status](https://gitlab.com/mrbandler/FsFirestore/badges/master/pipeline.svg)](https://gitlab.com/mrbandler/FsFirestore/commits/master)
+
 **Functional F# library to access Firestore database via Google Cloud Platform (GCP) or Firebase Project.**
 
 ## Table Of Content
