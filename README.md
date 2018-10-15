@@ -15,6 +15,8 @@
 
 ## 2. Usage
 
+> **NOTE:** Usage description will be added sooon...
+
 Please check the [wiki](https://github.com/mrbandler/FsFirestore/wiki) for documentation and in depth usage description.
 
 ## 3. Bugs and Features
