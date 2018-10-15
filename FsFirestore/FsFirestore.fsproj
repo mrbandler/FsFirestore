@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/mrbandler/FsFirestore</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>firebase, firestore, fsharp, google cloud platform, gcp, fivefingergames, FsFirestore, fsfirestore</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://raw.githubusercontent.com/mrbandler/FsFirestore/master/LICENSE</PackageLicenseUrl>
     <Version>1.0.0-beta</Version>

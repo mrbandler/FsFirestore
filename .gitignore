@@ -1,4 +1,7 @@
 
+# Ignore this file if it accidentally is added to the repo.
+GCP.json
+
 # Created by https://www.gitignore.io/api/fsharp,visualstudio,visualstudiocode
 
 ### fsharp ###

@@ -14,7 +14,7 @@ build:
       - ./package
 
 ##############################################################
-# Tests will be run on any pipeline build.
+# Running unit tests.
 ##############################################################
 test/unit-testing:
   stage: test

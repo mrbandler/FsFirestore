@@ -6,12 +6,11 @@ module Tests =
     open System
     open Xunit
     open Google.Cloud.Firestore
-    open Microsoft.FSharpLu
     open FsFirestore.Firestore
     open FsFirestore.Types
 
     /// Collection name used by the tests.
-    [<Literal>]
+    [<Literal>]    
     let testCollection = "tests"
 
     /// Document IDs used by the tests.
@@ -38,7 +37,7 @@ module Tests =
     [<Fact>]
     let ``Init Firestore connection`` () =
         let result = initFirestore findGCPAuthentication
-        Assert.Equal(result, true)
+        Assert.Equal(true, result)
 
     ///// Add document with generated ID to the Firestore DB test.
     //[<Fact>]
