@@ -1,27 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    <Company>fivefingergames</Company>
-    <Authors>fivefingergames</Authors>
-    <Description>Functional F# library to access Firestore database via Google Cloud Platform (GCP) or Firebase Project.</Description>
-    <Copyright>Copyright (c) 2018 fivefingergames.</Copyright>
-    <PackageProjectUrl>https://github.com/mrbandler/FsFirestore</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mrbandler/FsFirestore</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
-    <PackageTags>firebase, firestore, fsharp, google cloud platform, gcp, fivefingergames, FsFirestore, fsfirestore</PackageTags>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/mrbandler/FsFirestore/master/LICENSE</PackageLicenseUrl>
-    <Version>1.0.0-beta1</Version>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>bin\Debug\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FSharp.Json" Version="0.3.3" />
+    <PackageReference Include="FSharp.Json" Version="0.3.4" />
     <PackageReference Include="Google.Cloud.Firestore" Version="1.0.0-beta11" />
     <PackageReference Include="Microsoft.FSharpLu" Version="0.10.27" />
   </ItemGroup>

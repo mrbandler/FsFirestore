@@ -1,4 +1,4 @@
-namespace FsFirestore.Tests
+﻿namespace FsFirestore.Tests
 
 module Tests =
 
