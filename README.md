@@ -1,3 +1,5 @@
+![FsFirestore icon](https://raw.githubusercontent.com/mrbandler/FsFirestore/develop/Icons/FsFirestoreTransparent.png)
+
 # FsFirestore 
 
 [![pipeline status](https://gitlab.com/mrbandler/FsFirestore/badges/master/pipeline.svg)](https://gitlab.com/mrbandler/FsFirestore/commits/master) [![NuGet Badge](https://buildstats.info/nuget/FsFirestore?includePreReleases=true)](https://www.nuget.org/packages/FsFirestore)
