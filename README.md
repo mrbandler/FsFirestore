@@ -17,7 +17,76 @@
 
 ## 2. Usage
 
-> **NOTE:** Usage description will be added sooon...
+#### Connect to Firestore
+
+To use any of the Firestore features you have to initialize the connection via a Service Account JSON (either for [Firebase](https://console.firebase.google.com/project/_/settings/serviceaccounts/adminsdk) or [GCP](https://cloud.google.com/docs/authentication/getting-started)).
+
+```fsharp
+open FsFirestore.Firestore
+
+let connectToFirestore =
+	let didWeConnect = initFirestore "./path/to/your/service_account.json"
+```
+
+The `initFirestore` function returns a boolean, to indicate whether the connection could be established.
+
+#### Create, Read, Update and Delete (CRUD)
+
+After your successfully connected to your Firestore DB you can start manipulating data.
+
+For better handling within the API we added a generic retrieval functions, to simply retrieve your wanted model. Sadly the Googles .NET API only let's us use classes, to compensate we created a base class that can be used to make your life easier.
+
+```fsharp
+open Google.Cloud.Firestore
+open FsFirestore.Types
+
+[<FirestoreData>]
+type Address() =
+	inherit FirestoreDocument() // This is the base class that comes with FsFirestore
+	
+	[<FirestoreProperty>]
+	member val Street = "Pennsylvania Avenue" with get, set
+
+	[<FirestoreProperty>]
+	member val HouseNo = 1600 with get, set
+	
+	[<FirestoreProperty>]
+	member val City = "Washington" with get, set
+	
+	[<FirestoreProperty>]
+	member val State = "DC" with get, set
+
+// Because of the inheritance we now have some niffty features in this straight forward model class.
+let address = new Address()
+
+// We can retrieve all fields in a object list, which can later be used to query the DB.
+let fields = address.fields // => ["Pennsylvania Avenue"; 1600; "Washington"; "DC"]
+
+// We can ask the model, which in turn is a document in our Firebase DB which ID and Collection it belongs to, this is only true when retrieved via generic read function from FsFirestore.
+let docId = address.id
+let collectionId = address.collectionId
+```
+
+#### Let's read from the Firestore DB 
+
+```fsharp
+open FsFirestore.Firestore
+
+// Let's read an address from the DB and automatically convert it to our model.
+let address = document<Address> "addresses" "address-id"
+
+let docId = address.id // => address-id
+let collectionId = address.collectionId // => addresses
+
+// ---
+
+// Let's just retrieve the document reference...
+let addressRef = documentRef "addresses" "address-id"
+// When can if we wanted to then also convert it to our model type, so we would have the same as above.
+let address = convertTo<Address> addressRef
+```
+
+
 
 ## 3. Bugs and Features
 
