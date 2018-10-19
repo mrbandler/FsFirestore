@@ -1,4 +1,4 @@
-![FsFirestore Icon Banner](https://raw.githubusercontent.com/mrbandler/FsFirestore/develop/Icons/FsFirestireTransparentBanner.png)
+![FsFirestore Icon Banner](https://raw.githubusercontent.com/mrbandler/FsFirestore/develop/Icons/FsFirestoreTransparentBanner.png)
 
 # FsFirestore 
 
