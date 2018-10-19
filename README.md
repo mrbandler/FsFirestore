@@ -34,7 +34,7 @@ The `initFirestore` function returns a boolean, to indicate whether the connecti
 
 After your successfully connected to your Firestore DB you can start manipulating data.
 
-##### Model Classes
+#### Model Classes
 
 For better handling within the API we added a generic retrieval functions, to simply retrieve your wanted model. Sadly the Googles .NET API only let's us use classes, to compensate we created a base class that can be used to make your life easier.
 
