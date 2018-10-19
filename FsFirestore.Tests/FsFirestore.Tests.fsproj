@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Tests.fs" />
+    <Compile Include="Config.fs" />
+    <Compile Include="QueryTests.fs" />
+    <Compile Include="CRUDTests.fs" />
   </ItemGroup>
 
   <ItemGroup>

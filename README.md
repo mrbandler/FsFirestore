@@ -1,4 +1,4 @@
-![FsFirestore Icon Banner](https://raw.githubusercontent.com/mrbandler/FsFirestore/develop/Icons/FsFirestoreTransparentBanner.png)
+<img src="https://raw.githubusercontent.com/mrbandler/FsFirestore/develop/Icons/FsFirestoreTransparentBanner.png" alt="FsFirestore Icon Banner" width="150" height="110"/>
 
 # FsFirestore 
 
@@ -19,8 +19,6 @@
 
 > **NOTE:** Usage description will be added sooon...
 
-Please check the [wiki](https://github.com/mrbandler/FsFirestore/wiki) for documentation and in depth usage description.
-
 ## 3. Bugs and Features
 
 Please open a issue when you encounter any bugs 🐞 or have an idea for a new feature 💡.
@@ -31,11 +29,9 @@ If you like you can buy me a coffee:
 
 [![Support via PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://www.paypal.me/mrbandler/)
 
-![Support via Bitcoin](https://cdn.rawgit.com/cjdowner/cryptocurrency-icons/master/svg/color/btc.svg) `3LqohnMDLdn2VtKChQMGJ7pQt8az2Zyqn4`
+[![Donate with Bitcoin](https://en.cryptobadges.io/badge/big/3KGsDx52prxWciBkfNJYBkXaTJ6GUURP2c)](https://en.cryptobadges.io/donate/3KGsDx52prxWciBkfNJYBkXaTJ6GUURP2c)
 
-![Support via Ethereum](https://cdn.rawgit.com/cjdowner/cryptocurrency-icons/master/svg/color/eth.svg) `0x783A54Cd23077E0d1cB360c7125e04b8b5740Fb0`
-
-![Support via Litecoin](https://cdn.rawgit.com/cjdowner/cryptocurrency-icons/master/svg/color/ltc.svg) `MFB3QUUyL6iYumszEGZeiprM49XrKMXgtm`
+[![Donate with Ethereum](https://en.cryptobadges.io/badge/big/0xd6Ffc89Bc87f7dFdf0ef1aefF956634d4B7451c8)](https://en.cryptobadges.io/donate/0xd6Ffc89Bc87f7dFdf0ef1aefF956634d4B7451c8)
 
 ---
 
