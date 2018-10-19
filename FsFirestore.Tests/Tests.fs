@@ -48,7 +48,7 @@ module Tests =
 
         // Test.
         let doc = addDocument testCollection testData
-        let docData = deserializeDocument<Test> doc
+        let docData = convertTo<Test> doc
 
         Assert.NotNull(doc.Id)
         Assert.Equal(testCollection, doc.Parent.Id)
@@ -66,7 +66,7 @@ module Tests =
 
         // Test.
         let doc = addDocumentWithId testCollection testDocumentId testData
-        let docData = deserializeDocument<Test> doc
+        let docData = convertTo<Test> doc
 
         Assert.NotNull(doc.Id)
         Assert.Equal(testDocumentId, doc.Id)
@@ -82,13 +82,13 @@ module Tests =
         // Build up.
         initFirestore findGCPAuthentication |> ignore
         let doc = addDocument testCollection (new Test())
-        let docData = deserializeDocument<Test> doc
+        let docData = convertTo<Test> doc
 
         // Test.
         let newStr = "Hello Test!"
         docData.str <- newStr
         updateDocument doc.Parent.Id doc.Id docData |> ignore
-        let docUpdatedData = deserializeDocument<Test> doc
+        let docUpdatedData = convertTo<Test> doc
         
         Assert.Equal(newStr, docUpdatedData.str)
         Assert.Equal(docData.str, docUpdatedData.str)

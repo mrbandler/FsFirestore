@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Authors>fivefingergames</Authors>
+    <Company>fivefingergames</Company>
   </PropertyGroup>
 
   <ItemGroup>

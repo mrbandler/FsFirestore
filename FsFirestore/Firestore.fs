@@ -20,14 +20,14 @@ module Firestore =
                 false
 
     /// Deserializes a given document ('T).
-    let deserializeDocument<'T when 'T : not struct> (doc: DocumentReference) =
+    let convertTo<'T when 'T : not struct> (doc: DocumentReference) =
         getDocSnapshot doc
         |> deserializeSnapshot<'T>
 
     /// Deserializes a given documents ('T).
-    let deserializeDocuments<'T when 'T : not struct> docs =
+    let convertToMulti<'T when 'T : not struct> docs =
         docs
-        |> Seq.map (fun doc -> (deserializeDocument<'T> doc))
+        |> Seq.map (fun doc -> (convertTo<'T> doc))
 
     /// Returns a collection from the DB with a given name.
     let collection name =
@@ -46,7 +46,7 @@ module Firestore =
     /// Returns a document from a collection.
     let document<'T when 'T : not struct> col id =
         documentRef col id
-        |> deserializeDocument<'T>
+        |> convertTo<'T>
     
     /// Returns list of document references from a collection.
     let documentRefs col ids =
@@ -56,7 +56,7 @@ module Firestore =
     /// Returns a list of documents from a collection.
     let documents<'T when 'T : not struct> col ids =
         documentRefs col ids
-        |> deserializeDocuments<'T>
+        |> convertToMulti<'T>
 
     /// Returrns all documents from a collection.
     let allDocuments<'T when 'T : not struct> col =
