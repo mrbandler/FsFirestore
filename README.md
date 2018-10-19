@@ -34,6 +34,8 @@ The `initFirestore` function returns a boolean, to indicate whether the connecti
 
 After your successfully connected to your Firestore DB you can start manipulating data.
 
+##### Model Classes
+
 For better handling within the API we added a generic retrieval functions, to simply retrieve your wanted model. Sadly the Googles .NET API only let's us use classes, to compensate we created a base class that can be used to make your life easier.
 
 ```fsharp
@@ -62,7 +64,9 @@ let address = new Address()
 // We can retrieve all fields in a object list, which can later be used to query the DB.
 let fields = address.fields // => ["Pennsylvania Avenue"; 1600; "Washington"; "DC"]
 
-// We can ask the model, which in turn is a document in our Firebase DB which ID and Collection it belongs to, this is only true when retrieved via generic read function from FsFirestore.
+// We can ask the model, which in turn is a document in our Firebase DB
+// which ID and Collection it belongs to, this is only true when 
+// retrieved via generic read function from FsFirestore.
 let docId = address.id
 let collectionId = address.collectionId
 ```
@@ -82,7 +86,8 @@ let collectionId = address.collectionId // => addresses
 
 // Let's just retrieve the document reference...
 let addressRef = documentRef "addresses" "address-id"
-// When can if we wanted to then also convert it to our model type, so we would have the same as above.
+// Of course we could convert this document reference to the model
+// class aswell.
 let address = convertTo<Address> addressRef
 ```
 
