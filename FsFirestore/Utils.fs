@@ -1,6 +1,6 @@
 ﻿namespace FsFirestore
 
-module Utils =
+module internal Utils =
     
     open Google.Cloud.Firestore
     open FsFirestore.Types
