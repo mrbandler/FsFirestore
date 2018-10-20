@@ -10,7 +10,7 @@ module Firestore =
     let mutable private db: FirestoreDb = null
 
     /// Initializes the firestore connection.
-    let initFirestore path =
+    let connectToFirestore path =
         match setupGCPEnvironment path with
             | Some projectId ->
                 db <- FirestoreDb.Create(projectId)

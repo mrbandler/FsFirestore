@@ -8,15 +8,15 @@ module CRUDTests =
 
     /// Init firestore connection test.
     [<Fact>]
-    let ``Init Firestore connection`` () =
-        let result = initFirestore findGCPAuthentication
+    let ``Establish Firestore connection`` () =
+        let result = connectToFirestore findGCPAuthentication
         Assert.Equal(true, result)
 
     /// Add document with generated ID to the Firestore DB test.
     [<Fact>]
     let ``Add document with generated ID`` () =
         // Build up.
-        initFirestore findGCPAuthentication |> ignore
+        connectToFirestore findGCPAuthentication |> ignore
         let testData = new Test()
 
         // Test.
@@ -34,7 +34,7 @@ module CRUDTests =
     [<Fact>]
     let ``Add document with given ID`` () =
         // Build up.
-        initFirestore findGCPAuthentication |> ignore
+        connectToFirestore findGCPAuthentication |> ignore
         let testData = new Test()
 
         // Test.
@@ -53,7 +53,7 @@ module CRUDTests =
     [<Fact>]
     let ``Update document`` () =
         // Build up.
-        initFirestore findGCPAuthentication |> ignore
+        connectToFirestore findGCPAuthentication |> ignore
         let doc = addDocument testCollection (new Test())
         let docData = convertTo<Test> doc
 
@@ -73,7 +73,7 @@ module CRUDTests =
     [<Fact>]
     let ``Retrieve document`` () =
         // Build up.
-        initFirestore findGCPAuthentication |> ignore
+        connectToFirestore findGCPAuthentication |> ignore
         let testData = new Test() 
         let docRef = addDocument testCollection testData
 
@@ -91,7 +91,7 @@ module CRUDTests =
     [<Fact>]
     let ``Retrieve multiple documents`` () =
         // Build up.
-        initFirestore findGCPAuthentication |> ignore
+        connectToFirestore findGCPAuthentication |> ignore
 
         // Little rec function to create data.
         let rec createData (list: List<Test>) =
@@ -125,7 +125,7 @@ module CRUDTests =
     [<Fact>]
     let ``Delete document`` () =
         // Build up.
-        initFirestore findGCPAuthentication |> ignore
+        connectToFirestore findGCPAuthentication |> ignore
         let doc = addDocument testCollection (new Test())
 
         // Test.
