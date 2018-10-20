@@ -13,6 +13,7 @@
     <RepositoryUrl>https://github.com/mrbandler/FsFirestore</RepositoryUrl>
     <PackageTags>fsfirestore, fs, firestore, FsFirestore, gcp, google, cloud, platform, firebase, fire, base, fire, store</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Version>1.0.0-beta2</Version>
   </PropertyGroup>
 
   <ItemGroup>
