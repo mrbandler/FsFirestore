@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/mrbandler/FsFirestore/develop/Icons/FsFirestoreTransparentBanner.png" alt="FsFirestore Icon Banner" width="150" height="110"/>
+<img src="https://raw.githubusercontent.com/mrbandler/FsFirestore/master/Icons/FsFirestoreTransparentBanner.png" alt="FsFirestore Icon Banner" width="150" height="110"/>
 
 # FsFirestore 
 
