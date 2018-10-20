@@ -168,11 +168,11 @@ deleteDocument "addresses" "POTUS-address"
 
 > **NOTE:** The streaming API will be added soon...
 
-## 3. Bugs and Features
+## 2. Bugs and Features
 
 Please open a issue when you encounter any bugs 🐞 or have an idea for a new feature 💡.
 
-## 4. Buy me a coffee
+## 3. Buy me a coffee
 
 If you like you can buy me a coffee:
 
@@ -184,7 +184,7 @@ If you like you can buy me a coffee:
 
 ---
 
-## 5. License
+## 4. License
 
 MIT License
 
