@@ -34,7 +34,7 @@ module Query =
        
     /// Returns a query with a order (desc) condition.
     let orderByDescending (field: string) (query: Query) =
-        query.OrderBy(field)
+        query.OrderByDescending(field)
 
     /// Returns a query with a specific field selection condition.
     let select (fields: string[]) (query: Query) =
