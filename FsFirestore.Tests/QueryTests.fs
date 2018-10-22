@@ -63,29 +63,29 @@ module QueryTests =
     //    // Tear down.
     //    deleteDocuments QueryCollection docIds
 
-    //[<Theory>]
-    //[<InlineData(5)>]
-    //[<InlineData(10)>]
-    //[<InlineData(15)>]
-    //let `` Query documents with 'start at'`` () =
-    //    // Build up.
+    [<Theory>]
+    [<InlineData(5)>]
+    [<InlineData(10)>]
+    [<InlineData(15)>]
+    let `` Query documents with 'start at'`` () =
+        // Build up.
 
-    //    // Test.
+        // Test.
 
-    //    // Tear down.
-    //    ()
+        // Tear down.
+        ()
 
-    //[<Theory>]
-    //[<InlineData(5)>]
-    //[<InlineData(10)>]
-    //[<InlineData(15)>]
-    //let `` Query documents with 'start after'`` () =
-    //    // Build up.
+    [<Theory>]
+    [<InlineData(5)>]
+    [<InlineData(10)>]
+    [<InlineData(15)>]
+    let `` Query documents with 'start after'`` () =
+        // Build up.
 
-    //    // Test.
+        // Test.
 
-    //    // Tear down.
-    //    ()
+        // Tear down.
+        ()
 
     [<Theory>]
     [<InlineData(5, 3)>]
