@@ -27,7 +27,7 @@ module CRUDTests =
 
         Assert.NotNull(doc.Id)
         Assert.Equal(CRUDCollection, doc.Parent.Id)
-        Assert.Equal<obj[]>(testData.fields, docData.fields)
+        Assert.Equal<obj[]>(testData.allFields, docData.allFields)
 
         // Tear down.
         deleteDocument CRUDCollection doc.Id
@@ -49,7 +49,7 @@ module CRUDTests =
         Assert.NotNull(doc.Id)
         Assert.Equal(docId, doc.Id)
         Assert.Equal(CRUDCollection, doc.Parent.Id)
-        Assert.Equal<obj[]>(testData.fields, docData.fields)
+        Assert.Equal<obj[]>(testData.allFields, docData.allFields)
 
         // Tear down.
         deleteDocument CRUDCollection docId
@@ -91,7 +91,7 @@ module CRUDTests =
         let docData = document<Test> CRUDCollection docRef.Id
 
         Assert.NotNull(docData)
-        Assert.Equal<obj[]>(testData.fields, docData.fields)
+        Assert.Equal<obj[]>(testData.allFields, docData.allFields)
 
         // Tear down.
         deleteDocument CRUDCollection docRef.Id
@@ -118,7 +118,7 @@ module CRUDTests =
         
         let sortedDocs = docs |> List.sortBy (fun doc -> doc.num)
         let sortedDataList = dataList |> List.sortBy (fun doc -> doc.num)
-        List.iter2 (fun (createdData: Test) (docData: Test) -> Assert.Equal<obj[]>(createdData.fields, docData.fields)) sortedDataList sortedDocs
+        List.iter2 (fun (createdData: Test) (docData: Test) -> Assert.Equal<obj[]>(createdData.allFields, docData.allFields)) sortedDataList sortedDocs
 
         // Tear down.
         deleteDocuments CRUDCollection docIds
@@ -138,7 +138,7 @@ module CRUDTests =
 
         let sortedDocs = docs |> List.sortBy (fun doc -> doc.num)
         let sortedDataList = dataList |> List.sortBy (fun doc -> doc.num)
-        List.iter2 (fun (createdData: Test) (docData: Test) -> Assert.Equal<obj[]>(createdData.fields, docData.fields)) sortedDataList sortedDocs
+        List.iter2 (fun (createdData: Test) (docData: Test) -> Assert.Equal<obj[]>(createdData.allFields, docData.allFields)) sortedDataList sortedDocs
 
         // Tear down.
         deleteDocuments CRUDCollection docIds

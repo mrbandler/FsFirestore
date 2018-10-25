@@ -2,90 +2,128 @@
 
 module QueryTests =
     
+    open System
     open Xunit
     open FsFirestore.Firestore
     open FsFirestore.Query
     open Config
     open Data
 
-    //[<Theory>]
-    //[<InlineData(5)>]
-    //[<InlineData(10)>]
-    //[<InlineData(15)>]
-    //let `` Query documents with 'end at'`` (numOfDocs) =
-    //    // Build up.
-    //    connectToFirestore findGCPAuthentication |> ignore
-
-    //    // Create test and add to DB.
-    //    let dataList = createTestData numOfDocs
-    //    let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
-
-    //    // Test.
-    //    let endAtData = dataList |> List.find (fun data -> data.num = (numOfDocs - 1))
-    //    let queryResult = 
-    //        collection QueryCollection
-    //        |> endAt endAtData.fields
-    //        |> execQuery<Test>
-    //        |> List.ofSeq
-
-    //    Assert.NotEmpty(queryResult)
-    //    Assert.Equal(queryResult.Length, numOfDocs - 1)
-    //    queryResult
-    //    |> List.iter (fun doc -> Assert.NotNull(doc))
-
-    //    // Tear down.
-    //    deleteDocuments QueryCollection docIds
-
-    //[<Theory>]
-    //[<InlineData(5)>]
-    //[<InlineData(10)>]
-    //[<InlineData(15)>]
-    //let `` Query documents with 'end before'`` (numOfDocs) =
-    //    // Build up.
-    //    connectToFirestore findGCPAuthentication |> ignore
-
-    //    // Create test and add to DB.
-    //    let dataList = createTestData numOfDocs
-    //    let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
-
-    //    // Test.
-    //    let endAtData = dataList |> List.find (fun data -> data.num = (numOfDocs - 1))
-    //    let queryResult = 
-    //        collection QueryCollection
-    //        |> endAt endAtData.fields
-    //        |> execQuery<Test>
-    //        |> List.ofSeq
-
-    //    Assert.NotEmpty(queryResult)
-    //    Assert.Equal(queryResult.Length, numOfDocs - 2)
-    //    queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
-
-    //    // Tear down.
-    //    deleteDocuments QueryCollection docIds
-
     [<Theory>]
-    [<InlineData(5)>]
     [<InlineData(10)>]
     [<InlineData(15)>]
-    let `` Query documents with 'start at'`` () =
+    let `` Query documents with 'end at'`` (numOfDocs) =
         // Build up.
+        connectToFirestore findGCPAuthentication |> ignore
+
+        // Create test and add to DB.
+        let endAtNum = Random().Next(2, numOfDocs - 2)
+        let dataList = createTestData numOfDocs
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
 
         // Test.
+        let endAtData = dataList |> List.find (fun data -> data.num = endAtNum)
+        let queryResult = 
+            collection QueryCollection
+            |> orderBy "num"
+            |> endAt (endAtData.fields("num"))
+            |> execQuery<Test>
+            |> List.ofSeq
+
+        Assert.NotEmpty(queryResult)
+        Assert.Equal(queryResult.Length, endAtNum)
+        queryResult
+        |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        ()
+        deleteDocuments QueryCollection docIds
 
     [<Theory>]
-    [<InlineData(5)>]
     [<InlineData(10)>]
     [<InlineData(15)>]
-    let `` Query documents with 'start after'`` () =
+    let `` Query documents with 'end before'`` (numOfDocs) =        
         // Build up.
+        connectToFirestore findGCPAuthentication |> ignore
+
+        // Create test and add to DB.
+        let endBeforeNum = Random().Next(2, numOfDocs - 2)
+        let dataList = createTestData numOfDocs
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
 
         // Test.
+        let endAtData = dataList |> List.find (fun data -> data.num = endBeforeNum)
+        let queryResult = 
+            collection QueryCollection
+            |> orderBy "num"
+            |> endBefore (endAtData.fields("num"))
+            |> execQuery<Test>
+            |> List.ofSeq
+
+        Assert.NotEmpty(queryResult)
+        Assert.Equal(queryResult.Length, endBeforeNum - 1)
+        queryResult
+        |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        ()
+        deleteDocuments QueryCollection docIds
+
+    [<Theory>]
+    [<InlineData(10)>]
+    [<InlineData(15)>]
+    let `` Query documents with 'start at'`` (numOfDocs) =
+        // Build up.
+        connectToFirestore findGCPAuthentication |> ignore
+
+        // Create test and add to DB.
+        let startAtNum = Random().Next(2, numOfDocs - 2)
+        let dataList = createTestData numOfDocs
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+
+        // Test.
+        let endAtData = dataList |> List.find (fun data -> data.num = startAtNum)
+        let queryResult = 
+            collection QueryCollection
+            |> orderBy "num"
+            |> startAt (endAtData.fields("num"))
+            |> execQuery<Test>
+            |> List.ofSeq
+
+        Assert.NotEmpty(queryResult)
+        Assert.Equal(queryResult.Length, numOfDocs - (startAtNum - 1))
+        queryResult
+        |> List.iter (fun doc -> Assert.NotNull(doc))
+
+        // Tear down.
+        deleteDocuments QueryCollection docIds
+
+    [<Theory>]
+    [<InlineData(10)>]
+    [<InlineData(15)>]
+    let `` Query documents with 'start after'`` (numOfDocs) =
+        // Build up.
+        connectToFirestore findGCPAuthentication |> ignore
+
+        // Create test and add to DB.
+        let startAfterNum = Random().Next(2, numOfDocs - 2)
+        let dataList = createTestData numOfDocs
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+
+        // Test.
+        let endAtData = dataList |> List.find (fun data -> data.num = startAfterNum)
+        let queryResult = 
+            collection QueryCollection
+            |> orderBy "num"
+            |> startAfter (endAtData.fields("num"))
+            |> execQuery<Test>
+            |> List.ofSeq
+
+        Assert.NotEmpty(queryResult)
+        Assert.Equal(queryResult.Length, numOfDocs - startAfterNum)
+        queryResult
+        |> List.iter (fun doc -> Assert.NotNull(doc))
+
+        // Tear down.
+        deleteDocuments QueryCollection docIds
 
     [<Theory>]
     [<InlineData(5, 3)>]

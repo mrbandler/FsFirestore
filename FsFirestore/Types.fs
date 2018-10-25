@@ -3,6 +3,7 @@
 /// Contains type definitions that makes it easier to interact with the API.
 module Types =
     
+    open System
     open System.Reflection
     open Google.Cloud.Firestore
 
@@ -17,8 +18,16 @@ module Types =
         member val id = "" with get, set 
         member val collectionId = "" with get, set
 
-        member this.fields =
+        member this.allFields =
+            this.getFirestoreProperties
+            |> Array.map (fun (prop: PropertyInfo) -> (prop.GetValue(this)))
+
+        member this.fields ([<ParamArray>] names: string[])  =  
+            this.getFirestoreProperties
+            |> Array.filter (fun (prop: PropertyInfo) -> names |> Array.contains prop.Name)
+            |> Array.map (fun (prop: PropertyInfo) -> (prop.GetValue(this)))
+
+        member private this.getFirestoreProperties =
             this.GetType().GetProperties()
             |> Array.filter (fun prop -> (not (prop.Name = "id" || prop.Name = "collectionId" || prop.Name = "fields")))
-            |> Array.filter (fun prop -> (filterFirestoreAttributePredicate prop.CustomAttributes))
-            |> Array.map (fun prop -> (prop.GetValue(this)))
+            |> Array.filter (fun prop -> (filterFirestoreAttributePredicate prop.CustomAttributes))            
