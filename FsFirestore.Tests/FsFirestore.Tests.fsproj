@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Include="Config.fs" />
+    <Compile Include="Data.fs" />
     <Compile Include="QueryTests.fs" />
     <Compile Include="CRUDTests.fs" />
   </ItemGroup>

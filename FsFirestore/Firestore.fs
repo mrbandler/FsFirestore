@@ -47,7 +47,7 @@ module Firestore =
     let document<'T when 'T : not struct> col id =
         documentRef col id
         |> convertTo<'T>
-    
+
     /// Returns list of document references from a collection.
     let documentRefs col ids =
         collection col
@@ -82,3 +82,8 @@ module Firestore =
     let deleteDocument col id =
         collection col 
         |> deleteDoc id
+
+    /// Deletes multiple documents in a collection.
+    let deleteDocuments col (ids: string seq) =
+        ids
+        |>Seq.iter (deleteDocument col)

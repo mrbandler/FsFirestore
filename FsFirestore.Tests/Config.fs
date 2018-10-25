@@ -7,13 +7,13 @@ module Config =
     open Google.Cloud.Firestore
     open FsFirestore.Types
 
-    /// Collection name used by the tests.
+    /// Collection name used by the CRUD tests.
     [<Literal>]    
-    let testCollection = "tests"
+    let CRUDCollection = "crud-tests"
 
-    /// Document IDs used by the tests.
-    [<Literal>]
-    let testDocumentId = "test-id"
+    /// Collection name used by the query tests.
+    [<Literal>]    
+    let QueryCollection = "query-tests"
 
     /// Test class to be used as a model for the  tests.
     [<FirestoreData>]
@@ -21,10 +21,13 @@ module Config =
         inherit FirestoreDocument()
 
         [<FirestoreProperty>]
-        member val str = "Hello World!" with get, set 
+        member val str: string = "" with get, set 
 
         [<FirestoreProperty>]
-        member val num = 42 with get, set
+        member val num: int = 0 with get, set
+
+        [<FirestoreProperty>]
+        member val arr: int[] = [| |] with get, set
             
     /// Finds GCP authentication path.
     let findGCPAuthentication =
