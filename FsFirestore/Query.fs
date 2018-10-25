@@ -65,4 +65,6 @@ module Query =
     let whereLessThenOrEqualTo (field: string) value (query: Query) =
         query.WhereLessThanOrEqualTo(field, value)
 
-    
+    /// Returns a query with a condition of 'where array contains'.
+    let whereArrayContains (field: string) value (query: Query) =
+        query.WhereArrayContains(field, value)
