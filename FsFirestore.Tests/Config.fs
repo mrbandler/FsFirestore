@@ -21,10 +21,13 @@ module Config =
         inherit FirestoreDocument()
 
         [<FirestoreProperty>]
-        member val str = "" with get, set 
+        member val str: string = "" with get, set 
 
         [<FirestoreProperty>]
-        member val num = 0 with get, set
+        member val num: int = 0 with get, set
+
+        [<FirestoreProperty>]
+        member val arr: int[] = [| |] with get, set
             
     /// Finds GCP authentication path.
     let findGCPAuthentication =

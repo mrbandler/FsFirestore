@@ -126,7 +126,6 @@ module QueryTests =
         deleteDocuments QueryCollection docIds
 
     [<Theory>]
-    [<InlineData(5, 3)>]
     [<InlineData(10, 5)>]
     [<InlineData(15, 10)>]
     let `` Query documents with 'limit'`` (numOfDocs, limitCount) =
@@ -152,7 +151,6 @@ module QueryTests =
         deleteDocuments QueryCollection docIds
 
     [<Theory>]
-    [<InlineData(5, 3)>]
     [<InlineData(10, 5)>]
     [<InlineData(15, 10)>]
     let `` Query documents with 'offset'`` (numOfDocs, offsetCount) =
@@ -178,7 +176,6 @@ module QueryTests =
         deleteDocuments QueryCollection docIds
 
     [<Theory>]
-    [<InlineData(5)>]
     [<InlineData(10)>]
     [<InlineData(15)>]
     let `` Query documents with 'order by asc'`` (numOfDocs) =
@@ -206,7 +203,6 @@ module QueryTests =
         deleteDocuments QueryCollection docIds
 
     [<Theory>]
-    [<InlineData(5)>]
     [<InlineData(10)>]
     [<InlineData(15)>]
     let `` Query documents with 'oder by desc'`` (numOfDocs) =
@@ -259,7 +255,33 @@ module QueryTests =
         deleteDocuments QueryCollection docIds
 
     [<Theory>]
-    [<InlineData(5, 3)>]
+    [<InlineData(10)>]
+    [<InlineData(15)>]
+    let `` Query documents with 'array contains'`` (numOfDocs) =
+        // Build up.
+        connectToFirestore findGCPAuthentication |> ignore
+
+        // Create test and add to DB.
+        let arrayContainsValue = Random().Next(2, numOfDocs - 2)
+        let dataList = createShuffledTestData numOfDocs
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+
+        // Test.
+        let queryResult =
+            collection QueryCollection
+            |> whereArrayContains "arr" arrayContainsValue
+            |> execQuery<Test>
+            |> List.ofSeq
+
+        Assert.NotEmpty(queryResult)
+        Assert.Equal(queryResult.Length, numOfDocs - (arrayContainsValue - 1))
+        queryResult |> List.iter (fun doc ->  Assert.True(doc.arr |> Array.contains arrayContainsValue))
+        queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
+
+        // Tear down.
+        deleteDocuments QueryCollection docIds
+
+    [<Theory>]
     [<InlineData(10, 5)>]
     [<InlineData(15, 10)>]
     let `` Query documents with 'where equal to'`` (numOfDocs, selectNum) =
@@ -287,7 +309,6 @@ module QueryTests =
         deleteDocuments QueryCollection docIds
 
     [<Theory>]
-    [<InlineData(5, 3)>]
     [<InlineData(10, 5)>]
     [<InlineData(15, 10)>]
     let `` Query documents with 'where greater then'`` (numOfDocs, greaterThenNum) =
@@ -314,7 +335,6 @@ module QueryTests =
         deleteDocuments QueryCollection docIds
 
     [<Theory>]
-    [<InlineData(5, 3)>]
     [<InlineData(10, 5)>]
     [<InlineData(15, 10)>]
     let `` Query documents with 'where greater then or equal to'`` (numOfDocs, greaterThenOrEqualNum) =
@@ -341,7 +361,6 @@ module QueryTests =
         deleteDocuments QueryCollection docIds
 
     [<Theory>]
-    [<InlineData(5, 3)>]
     [<InlineData(10, 5)>]
     [<InlineData(15, 10)>]
     let `` Query documents with 'where less then'`` (numOfDocs, lessThenNum) =
@@ -368,7 +387,6 @@ module QueryTests =
         deleteDocuments QueryCollection docIds
 
     [<Theory>]
-    [<InlineData(5, 3)>]
     [<InlineData(10, 5)>]
     [<InlineData(15, 10)>]
     let `` Query documents with 'where less then or equal to'`` (numOfDocs, lessThenOrEqualNum) =
@@ -395,7 +413,6 @@ module QueryTests =
         deleteDocuments QueryCollection docIds
      
     [<Theory>]
-    [<InlineData(5, 2, 4)>]
     [<InlineData(10, 2, 7)>]
     [<InlineData(15, 4, 13)>]
     let `` Query documents with multiple conditions`` (numOfDocs, greaterThenNum, lessThenNum) =

@@ -5,6 +5,16 @@ module Data =
     open FsFirestore.Tests.Config
     open System
 
+    /// Fills the array in the given test data set.
+    let private fillArray (dataList: Test list) =
+        let length = dataList.Length
+        
+        dataList
+        |> List.iter (fun data -> data.arr <- [| for i in 1 .. data.num -> i |])
+        
+        dataList
+
+
     /// Shuffles an array in place.
     let private shuffleInPlace (array : 'a[]) =
         let swap i j =
@@ -32,6 +42,7 @@ module Data =
     /// Creates test data for test cases.
     let createTestData numOfDocs =
         (createData numOfDocs 0 [])
+        |> fillArray
 
     /// Creates shuffled test data for test cases.
     let createShuffledTestData numOfDocs =
@@ -41,3 +52,4 @@ module Data =
         |> Array.ofList
         |> shuffleInPlace
         |> List.ofArray
+        |> fillArray
