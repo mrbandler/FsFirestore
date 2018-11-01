@@ -61,16 +61,18 @@ let address = new Address()
 
 // We can retrieve all fields in a object list, 
 // which can later be used to query Firestore.
-let fields = address.fields // => ["Pennsylvania Avenue"; 1600; "Washington"; "DC"]
+let fields = address.AllFields // => ["Pennsylvania Avenue"; 1600; "Washington"; "DC"]
+let specificField = address.Fields("HouseNo", "City") // => [1600; "Washington"]
 
 // We can ask the model which ID and collection it belongs to.
-let docId = address.id
-let collectionId = address.collectionId
+let docId = address.Id
+let collectionId = address.CollectionId
 ```
 
 #### Reading Documents
 
 ```fsharp
+open Google.Cloud.Firestore
 open FsFirestore.Firestore
 
 // Let's read an address from Firestore and 
@@ -79,8 +81,8 @@ let address = document<Address> "addresses" "POTUS-address"
 
 // Again if your model inherits from "FirestoreDocument"
 // you can use these features.
-let docId = address.id // => "POTUS-address""
-let collectionId = address.collectionId // => "addresses""
+let docId = address.Id // => "POTUS-address""
+let collectionId = address.CollectionId // => "addresses""
 
 // --- or ---
 
@@ -91,13 +93,14 @@ let address = convertTo<Address> addressRef
 
 // Again if your model inherits from "FirestoreDocument"
 // you can use these features.
-let docId = address.id // => "POTUS-address""
-let collectionId = address.collectionId // => "addresses""
+let docId = address.Id // => "POTUS-address""
+let collectionId = address.CollectionId // => "addresses""
 ```
 
 #### Querying Documents
 
 ```fsharp
+open Google.Cloud.Firestore
 open FsFirestore.Firestore
 open FsFirestore.Query
 
@@ -108,7 +111,8 @@ let queryCollection = collection "addresses"
 // Now we can chain conditions togehter.
 // Let's query all addresses in Pennsylvania Avenue, DC up to POTUS's one.
 let addresses = 
-	queryCollection
+    queryCollection
+    |> orderBy "HouseNo"
     |> whereEqualTo "State" "DC"
     |> whereEqualTo "Street" "Pennsylvania Avenue"
     |> whereGreaterThenOrEqualTo "HouseNo" 1
@@ -119,6 +123,7 @@ let addresses =
 #### Writing Documents
 
 ```fsharp
+open Google.Cloud.Firestore
 open FsFirestore.Firestore
 
 // Let's create the model that we want to add to Firestore
@@ -126,12 +131,12 @@ let address = new Address()
 
 // Now we can add the address to Firestore with a given 
 // collection name and ID.
-let docRef = addDocumentWithId "addresses" "POTUS-address" address
+let docRef = addDocument "addresses" (Some "POTUS-address") address
 
 // -- or --
 
 // We can also add the address and let the ID be generated automatically.
-let docRef = addDocument "addresses" address
+let docRef = addDocument "addresses" None address
 ```
 
 #### Updating Documents
@@ -157,16 +162,123 @@ open FsFirestore.Firestore
 
 // To delete a document we simply need the collection ID
 // and the document ID.
-deleteDocument "addresses" "POTUS-address"
+deleteDocument None "addresses" "POTUS-address"
+
+// -- or --
+
+// Additionally we can specify a precondition for the deletion process.
+let timeStamp = Timestamp.FromDateTime(DateTime.Today)
+let precondition = Precondition.LastUpdated(timeStamp)
+deleteDocument precondition "addresses" "POTUS-address"
 ```
 
 ### Transactions
 
-> **NOTE:** Transactions will be added soon...
+Transactions are functions which take in a `Transaction` object to create, read, update, delete and query documents within the transaction scope.
+
+##### Reading Documents in Transaction
+
+```fsharp
+open Google.Cloud.Firestore
+open FsFirestore.Transaction
+
+// Reading a document works just as aspected only with the minor difference
+// to use the transaction specific function within the Transaction module.
+let transactionFunc (trans: Transaction) =
+	documentInTrans<Test> trans "addresses" "POTUS-address"
+	
+// Now let's run the transaction.
+// Notice that the transaction will return the return value from the actual transaction
+// function.
+let address = runTransaction transactionFunc
+
+// -- or --
+
+// You can specify the return values type, but F# will detected the type automatically
+// most of the time.
+let address = runTransaction<Address> transactionFunc
+```
+
+##### Writing Documents in Transaction
+
+```fsharp
+open Google.Cloud.Firestore
+open FsFirestore.Transaction
+
+// Let's create the model that we want to add to Firestore
+let address = new Address()
+
+// Now let's write a transaction to add the to Firestore with a given 
+// collection name and ID.
+let transactionFunc (trans: Transaction) =
+	addDocumentInTrans trans "addresses" (Some "POTUS-address") address
+	
+// Let's run the transaction.
+let docRef = runTransaction transactionFunc 
+
+// -- or --
+
+// We can also add the address and let the ID be generated automatically.
+let transactionFunc (trans: Transaction) =
+	addDocumentInTrans trans "addresses" None address
+```
+
+##### Updating Documents in Transaction
+
+```fsharp
+open Google.Cloud.Firestore
+open FsFirestore.Firestore
+
+// Let's create our update transaction.
+let transactionFunc (trans: Transaction) =
+    // We can first the read the document we want to update 
+    // from Firestore.
+	let address = documentInTrans<Address> trans "addresses" "POTUS-address"
+	
+    // Now let's move the presidents house number along one number.
+    address.HouseNo <- 1601
+
+    // And update the document within Firestore.
+    updateDocumentInTrans trans "addresses" "POTUS-address" address
+    
+// Let's run the transaction.
+let docRef = runTransaction transactionFunc
+```
+
+##### Deleting Documents in Transaction
+
+```fsharp
+open Google.Cloud.Firestore
+open FsFirestore.Firestore
+
+// Let's create our deletion transaction.
+let transactionFunc (trans: Transaction) =
+    // To delete a document we simply need the collection ID
+    // and the document ID.
+	deleteDocumentInTrans trans None "addresses" "POTUS-address"
+	
+// Let's run the transaction.
+runTransaction transactionFunc
+
+// -- or --
+
+// As mentioned in the CRUD section we can also specify a precondition 
+// for the deletion process.
+let transactionFunc (trans: Transaction) =
+    let timeStamp = Timestamp.FromDateTime(DateTime.Today)
+    let precondition = Precondition.LastUpdated(timeStamp)
+    deleteDocument precondition "addresses" "POTUS-address"
+    
+runTransaction transactionFunc
+```
 
 ### Listening for Document Changes (Streaming API)
 
-> **NOTE:** The streaming API will be added soon...
+> **TODO:** The streaming API will be added soon... Stay tuned!
+
+### Async Functions
+
+> **TODO:** The async API will be added soon... Stay tuned!
 
 ## 2. Bugs and Features
 

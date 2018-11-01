@@ -7,7 +7,7 @@ module Firestore =
     open FsFirestore.Utils
 
     /// Firestore Database.
-    let mutable private db: FirestoreDb = null
+    let mutable internal db: FirestoreDb = null
 
     /// Initializes the firestore connection.
     let connectToFirestore path =
@@ -18,11 +18,16 @@ module Firestore =
 
             | None -> 
                 false
+            
+    /// Deserializes a given document snapshot ('T).
+    let convertSnapshotTo<'T when 'T : not struct> (snap: DocumentSnapshot) =
+        snap
+        |> deserializeSnapshot<'T>
 
     /// Deserializes a given document ('T).
     let convertTo<'T when 'T : not struct> (doc: DocumentReference) =
         getDocSnapshot doc
-        |> deserializeSnapshot<'T>
+        |> convertSnapshotTo<'T>
 
     /// Deserializes a given documents ('T).
     let convertToMulti<'T when 'T : not struct> docs =
@@ -42,16 +47,16 @@ module Firestore =
     let documentRef col id =
         collection col
         |> getDoc id
+    
+    /// Returns list of document references from a collection.
+    let documentRefs col ids =
+        collection col
+        |> getDocs ids
 
     /// Returns a document from a collection.
     let document<'T when 'T : not struct> col id =
         documentRef col id
         |> convertTo<'T>
-
-    /// Returns list of document references from a collection.
-    let documentRefs col ids =
-        collection col
-        |> getDocs ids
 
     /// Returns a list of documents from a collection.
     let documents<'T when 'T : not struct> col ids =
@@ -63,27 +68,26 @@ module Firestore =
         (collection col |> getCollectionSnapshot).Documents 
         |> deserializeSnapshots<'T>
 
-    /// Adds a document to a collection; the ID of the document is generated automatically.
-    let addDocument col doc =
-        collection col
-        |> addDoc doc
-
     /// Adds a document to a collection.
-    let addDocumentWithId col id doc =
-        collection col
-        |> createDoc id doc
+    let addDocument col (id: string option) data =
+        let colRef = collection col
+
+        match id with
+        | Some id -> colRef |> createDoc id data
+        | None -> colRef |> addDoc data
 
     /// Updates a document in a collection.
-    let updateDocument col id doc =
+    let updateDocument col id data =
         collection col 
-        |> setDoc id doc
+        |> setDoc id data
 
     /// Deletes a document in a collection.
-    let deleteDocument col id =
+    let deleteDocument (precondition: Precondition option) col id =
         collection col 
-        |> deleteDoc id
+        |> deleteDoc precondition id
 
     /// Deletes multiple documents in a collection.
-    let deleteDocuments col (ids: string seq) =
+    let deleteDocuments (precondition: Precondition option) col (ids: string seq) =
         ids
-        |>Seq.iter (deleteDocument col)
+        |>Seq.iter (deleteDocument precondition col)
+

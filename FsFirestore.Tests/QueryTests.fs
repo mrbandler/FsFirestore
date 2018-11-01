@@ -19,14 +19,14 @@ module QueryTests =
         // Create test and add to DB.
         let endAtNum = Random().Next(2, numOfDocs - 2)
         let dataList = createTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
         let endAtData = dataList |> List.find (fun data -> data.num = endAtNum)
         let queryResult = 
             collection QueryCollection
             |> orderBy "num"
-            |> endAt (endAtData.fields("num"))
+            |> endAt (endAtData.Fields("num"))
             |> execQuery<Test>
             |> List.ofSeq
 
@@ -36,7 +36,7 @@ module QueryTests =
         |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10)>]
@@ -48,14 +48,14 @@ module QueryTests =
         // Create test and add to DB.
         let endBeforeNum = Random().Next(2, numOfDocs - 2)
         let dataList = createTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
         let endAtData = dataList |> List.find (fun data -> data.num = endBeforeNum)
         let queryResult = 
             collection QueryCollection
             |> orderBy "num"
-            |> endBefore (endAtData.fields("num"))
+            |> endBefore (endAtData.Fields("num"))
             |> execQuery<Test>
             |> List.ofSeq
 
@@ -65,7 +65,7 @@ module QueryTests =
         |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10)>]
@@ -77,14 +77,14 @@ module QueryTests =
         // Create test and add to DB.
         let startAtNum = Random().Next(2, numOfDocs - 2)
         let dataList = createTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
         let endAtData = dataList |> List.find (fun data -> data.num = startAtNum)
         let queryResult = 
             collection QueryCollection
             |> orderBy "num"
-            |> startAt (endAtData.fields("num"))
+            |> startAt (endAtData.Fields("num"))
             |> execQuery<Test>
             |> List.ofSeq
 
@@ -94,7 +94,7 @@ module QueryTests =
         |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10)>]
@@ -106,14 +106,14 @@ module QueryTests =
         // Create test and add to DB.
         let startAfterNum = Random().Next(2, numOfDocs - 2)
         let dataList = createTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
         let endAtData = dataList |> List.find (fun data -> data.num = startAfterNum)
         let queryResult = 
             collection QueryCollection
             |> orderBy "num"
-            |> startAfter (endAtData.fields("num"))
+            |> startAfter (endAtData.Fields("num"))
             |> execQuery<Test>
             |> List.ofSeq
 
@@ -123,7 +123,7 @@ module QueryTests =
         |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10, 5)>]
@@ -134,7 +134,7 @@ module QueryTests =
 
         // Create test and add to DB.
         let dataList = createTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test
         let queryResult = 
@@ -148,7 +148,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10, 5)>]
@@ -159,7 +159,7 @@ module QueryTests =
 
         // Create test and add to DB.
         let dataList = createTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test
         let queryResult = 
@@ -173,7 +173,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10)>]
@@ -184,7 +184,7 @@ module QueryTests =
 
         // Create test and add to DB.
         let dataList = createShuffledTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
         let queryResult =
@@ -200,7 +200,7 @@ module QueryTests =
         Assert.Equal(isAscOrdered, true)
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10)>]
@@ -211,7 +211,7 @@ module QueryTests =
 
         // Create test and add to DB.
         let dataList = createShuffledTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
         let queryResult =
@@ -227,7 +227,7 @@ module QueryTests =
         Assert.Equal(isDescOrdered, true)
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(5)>]
@@ -237,7 +237,7 @@ module QueryTests =
 
         // Create test and add to DB.
         let dataList = createTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
         let queryResult =
@@ -252,7 +252,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.Equal("", doc.str))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10)>]
@@ -264,7 +264,7 @@ module QueryTests =
         // Create test and add to DB.
         let arrayContainsValue = Random().Next(2, numOfDocs - 2)
         let dataList = createShuffledTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
         let queryResult =
@@ -279,7 +279,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10, 5)>]
@@ -290,7 +290,7 @@ module QueryTests =
 
         // Create test and add to DB.
         let dataList = createShuffledTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
         let queryResult =
@@ -306,7 +306,7 @@ module QueryTests =
         Assert.NotNull(doc)
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10, 5)>]
@@ -317,7 +317,7 @@ module QueryTests =
 
         // Create test and add to DB.
         let dataList = createShuffledTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
         let queryResult =
@@ -332,7 +332,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
  
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10, 5)>]
@@ -343,7 +343,7 @@ module QueryTests =
 
         // Create test and add to DB.
         let dataList = createShuffledTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
         let queryResult =
@@ -358,7 +358,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
  
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10, 5)>]
@@ -369,8 +369,8 @@ module QueryTests =
 
         // Create test and add to DB.
         let dataList = createShuffledTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
-
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
+         
         // Test.
         let queryResult =
             collection QueryCollection
@@ -384,7 +384,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
  
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10, 5)>]
@@ -395,7 +395,7 @@ module QueryTests =
 
         // Create test and add to DB.
         let dataList = createShuffledTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
         let queryResult =
@@ -410,7 +410,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
  
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
      
     [<Theory>]
     [<InlineData(10, 2, 7)>]
@@ -421,7 +421,7 @@ module QueryTests =
 
         // Create test and add to DB.
         let dataList = createShuffledTestData numOfDocs
-        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
         let queryResult =
@@ -443,5 +443,5 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
  
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
