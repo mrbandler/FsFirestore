@@ -31,8 +31,6 @@ module CRUDTests =
         Assert.Equal<obj[]>(testData.AllFields, docData.AllFields)
 
         // Tear down.
-        let timeStamp = Timestamp.FromDateTime(DateTime.Today)
-        let precondition = Precondition.LastUpdated(timeStamp)
         deleteDocument None CRUDCollection doc.Id
 
     /// Add document with ID to the Firestore DB test.
