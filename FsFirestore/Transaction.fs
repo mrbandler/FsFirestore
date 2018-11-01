@@ -8,8 +8,10 @@ module Transaction =
     open FsFirestore.TransUtils
 
     /// Runs a given transaction function in a Firestore transaction.
-    let runTransaction<'T when 'T : not struct> (transactionFunc: Transaction -> 'T) (options: TransactionOptions option)  =
-        runTransaction<'T> db transactionFunc options
+    let runTransaction<'T when 'T : not struct> (transactionFunc: Transaction -> 'T) =
+        db.RunTransactionAsync<'T>((fun trans -> async { return (transactionFunc trans) } |> Async.StartAsTask))
+        |> Async.AwaitTask
+        |> Async.RunSynchronously
 
     /// Executes a given query with respect to the given transaction.
     let execQueryInTrans<'T when 'T : not struct> (transaction: Transaction) (query: Query) =

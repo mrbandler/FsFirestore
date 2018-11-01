@@ -36,7 +36,7 @@ module QueryTests =
         |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10)>]
@@ -65,7 +65,7 @@ module QueryTests =
         |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10)>]
@@ -94,7 +94,7 @@ module QueryTests =
         |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10)>]
@@ -123,7 +123,7 @@ module QueryTests =
         |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10, 5)>]
@@ -148,7 +148,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10, 5)>]
@@ -173,7 +173,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10)>]
@@ -200,7 +200,7 @@ module QueryTests =
         Assert.Equal(isAscOrdered, true)
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10)>]
@@ -227,7 +227,7 @@ module QueryTests =
         Assert.Equal(isDescOrdered, true)
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(5)>]
@@ -252,7 +252,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.Equal("", doc.str))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10)>]
@@ -279,7 +279,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10, 5)>]
@@ -306,7 +306,7 @@ module QueryTests =
         Assert.NotNull(doc)
 
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10, 5)>]
@@ -332,7 +332,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
  
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10, 5)>]
@@ -358,7 +358,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
  
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10, 5)>]
@@ -384,7 +384,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
  
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 
     [<Theory>]
     [<InlineData(10, 5)>]
@@ -410,7 +410,7 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
  
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
      
     [<Theory>]
     [<InlineData(10, 2, 7)>]
@@ -443,5 +443,5 @@ module QueryTests =
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
  
         // Tear down.
-        deleteDocuments QueryCollection docIds
+        deleteDocuments None QueryCollection docIds
 

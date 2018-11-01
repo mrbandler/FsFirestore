@@ -3,9 +3,11 @@
 module CRUDTests =
 
     open Xunit
+    open Google.Cloud.Firestore
     open FsFirestore.Firestore
     open Config
     open Data
+    open System
 
     /// Init firestore connection test.
     [<Fact>]
@@ -29,7 +31,9 @@ module CRUDTests =
         Assert.Equal<obj[]>(testData.AllFields, docData.AllFields)
 
         // Tear down.
-        deleteDocument CRUDCollection doc.Id
+        let timeStamp = Timestamp.FromDateTime(DateTime.Today)
+        let precondition = Precondition.LastUpdated(timeStamp)
+        deleteDocument None CRUDCollection doc.Id
 
     /// Add document with ID to the Firestore DB test.
     [<Theory>]
@@ -51,7 +55,7 @@ module CRUDTests =
         Assert.Equal<obj[]>(testData.AllFields, docData.AllFields)
 
         // Tear down.
-        deleteDocument CRUDCollection doc.Id
+        deleteDocument None CRUDCollection doc.Id
 
     /// Update a document in the Firestore DB test.
     [<Theory>]
@@ -76,7 +80,7 @@ module CRUDTests =
         Assert.Equal(docData.num, docUpdatedData.num)
 
         // Tear down.
-        deleteDocument CRUDCollection doc.Id
+        deleteDocument None CRUDCollection doc.Id
 
     /// Retrieve a document from the Firestore DB test.
     [<Fact>]
@@ -93,7 +97,7 @@ module CRUDTests =
         Assert.Equal<obj[]>(testData.AllFields, docData.AllFields)
 
         // Tear down.
-        deleteDocument CRUDCollection docRef.Id
+        deleteDocument None CRUDCollection docRef.Id
 
 
     /// Retrieve multiple documents from the Firestore DB test.
@@ -120,7 +124,7 @@ module CRUDTests =
         List.iter2 (fun (createdData: Test) (docData: Test) -> Assert.Equal<obj[]>(createdData.AllFields, docData.AllFields)) sortedDataList sortedDocs
 
         // Tear down.
-        deleteDocuments CRUDCollection docIds
+        deleteDocuments None CRUDCollection docIds
 
     [<Fact>]
     let ``Read all documents from collection`` () =
@@ -140,7 +144,7 @@ module CRUDTests =
         List.iter2 (fun (createdData: Test) (docData: Test) -> Assert.Equal<obj[]>(createdData.AllFields, docData.AllFields)) sortedDataList sortedDocs
 
         // Tear down.
-        deleteDocuments CRUDCollection docIds
+        deleteDocuments None CRUDCollection docIds
 
     /// Delete a document from the Firestore DB test.
     [<Fact>]
@@ -150,7 +154,7 @@ module CRUDTests =
         let doc = addDocument CRUDCollection None (new Test())
 
         // Test.
-        deleteDocument CRUDCollection doc.Id
+        deleteDocument None CRUDCollection doc.Id
         let docAfterDel = document<Test> CRUDCollection doc.Id
 
         Assert.Null(docAfterDel)
@@ -174,7 +178,7 @@ module CRUDTests =
         let docIds = dataList |> List.map(fun data -> (addDocument CRUDCollection None data).Id)
 
         // Test.
-        deleteDocuments CRUDCollection docIds
+        deleteDocuments None CRUDCollection docIds
         let docsAfterDel = documents<Test> CRUDCollection docIds
 
         docsAfterDel

@@ -82,12 +82,12 @@ module Firestore =
         |> setDoc id data
 
     /// Deletes a document in a collection.
-    let deleteDocument col id =
+    let deleteDocument (precondition: Precondition option) col id =
         collection col 
-        |> deleteDoc id
+        |> deleteDoc precondition id
 
     /// Deletes multiple documents in a collection.
-    let deleteDocuments col (ids: string seq) =
+    let deleteDocuments (precondition: Precondition option) col (ids: string seq) =
         ids
-        |>Seq.iter (deleteDocument col)
+        |>Seq.iter (deleteDocument precondition col)
 

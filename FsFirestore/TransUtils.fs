@@ -4,18 +4,6 @@ module internal TransUtils =
     
     open Google.Cloud.Firestore
     open FsFirestore.Utils
-
-    /// Runs a given transaction functions.
-    let internal runTransaction<'T when 'T : not struct> (db: FirestoreDb) (transactionFunc: Transaction -> 'T) (options: TransactionOptions option) =
-        match options with
-        | Some opts -> 
-            db.RunTransactionAsync<'T>((fun trans -> async { return (transactionFunc trans) } |> Async.StartAsTask), opts)
-            |> Async.AwaitTask
-            |> Async.RunSynchronously
-        | None -> 
-            db.RunTransactionAsync<'T>((fun trans -> async { return (transactionFunc trans) } |> Async.StartAsTask))
-            |> Async.AwaitTask
-            |> Async.RunSynchronously
         
     /// Returns a query snapshot with respect to the given transaction
     let internal getQuerySnapshotInTrans (trans: Transaction) (query: Query) =

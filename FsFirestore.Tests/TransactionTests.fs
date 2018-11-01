@@ -23,7 +23,7 @@ module TransactionTests =
         let transFunc (trans: Transaction) =
             addDocumentInTrans trans TransCollection docId testData
 
-        let doc = runTransaction transFunc None
+        let doc = runTransaction transFunc
         let docData = convertTo<Test> doc
 
         Assert.NotNull(docData)
@@ -32,7 +32,7 @@ module TransactionTests =
         Assert.Equal<obj[]>(testData.AllFields, docData.AllFields)
 
         // Tear down.
-        deleteDocument TransCollection docData.Id
+        deleteDocument None TransCollection docData.Id
 
     /// Update a document in a transaction in the Firestore DB test.
     [<Theory>]
@@ -51,7 +51,7 @@ module TransactionTests =
             docData.num <- updateNum
             updateDocumentInTrans trans doc.Parent.Id doc.Id docData
 
-        let docUpdated = runTransaction transFunc None
+        let docUpdated = runTransaction transFunc
         let docUpdatedData = convertTo<Test> docUpdated
         
         Assert.NotNull(docUpdated)
@@ -61,7 +61,7 @@ module TransactionTests =
         Assert.Equal(docData.num, docUpdatedData.num)
 
         // Tear down.
-        deleteDocument TransCollection doc.Id
+        deleteDocument None TransCollection doc.Id
 
     /// Retrieve a document in transaction from the Firestore DB test.
     [<Fact>]
@@ -75,13 +75,13 @@ module TransactionTests =
         let transFunc (trans: Transaction) =
             documentInTrans<Test> trans TransCollection docRef.Id
 
-        let docData = runTransaction transFunc None
+        let docData = runTransaction transFunc
 
         Assert.NotNull(docData)
         Assert.Equal<obj[]>(testData.AllFields, docData.AllFields)
 
         // Tear down.
-        deleteDocument TransCollection docRef.Id
+        deleteDocument None TransCollection docRef.Id
 
     /// Retrieve multiple documents in transaction from the Firestore DB test.
     [<Theory>]
@@ -102,7 +102,7 @@ module TransactionTests =
         let transFunc (trans: Transaction) =
             documentsInTrans<Test> trans TransCollection docIds |> List.ofSeq
         
-        let docs = runTransaction transFunc None
+        let docs = runTransaction transFunc
         
         Assert.NotEmpty(docs)
 
@@ -111,7 +111,7 @@ module TransactionTests =
         List.iter2 (fun (createdData: Test) (docData: Test) -> Assert.Equal<obj[]>(createdData.AllFields, docData.AllFields)) sortedDataList sortedDocs
 
         // Tear down.
-        deleteDocuments TransCollection docIds
+        deleteDocuments None TransCollection docIds
 
     /// Delete a document in transaction from the Firestore DB test.
     [<Fact>]
@@ -124,7 +124,7 @@ module TransactionTests =
         let transFunc (trans: Transaction) =
             deleteDocumentInTrans trans None TransCollection doc.Id
 
-        runTransaction transFunc None
+        runTransaction transFunc
         let docAfterDel = document<Test> TransCollection doc.Id
 
         Assert.Null(docAfterDel)
@@ -151,7 +151,7 @@ module TransactionTests =
         let transFunc (trans: Transaction) =
             deleteDocumentsInTrans trans None TransCollection docIds
 
-        runTransaction transFunc None 
+        runTransaction transFunc
         let docsAfterDel = documents<Test> TransCollection docIds
 
         docsAfterDel

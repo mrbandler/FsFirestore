@@ -83,10 +83,17 @@ module internal Utils =
         docRef
 
     /// Deletes a document with a given ID in a given collection.
-    let internal deleteDoc id (collection: CollectionReference) =
+    let internal deleteDoc (precondition: Precondition option) id (collection: CollectionReference) =
         let docRef = getDoc id collection
 
-        docRef.DeleteAsync()
-        |> Async.AwaitTask
-        |> Async.RunSynchronously
-        |> ignore
+        match precondition with
+        | Some precond ->         
+            docRef.DeleteAsync(precond)
+            |> Async.AwaitTask
+            |> Async.RunSynchronously
+            |> ignore
+        | None ->
+            docRef.DeleteAsync()
+            |> Async.AwaitTask
+            |> Async.RunSynchronously
+            |> ignore
