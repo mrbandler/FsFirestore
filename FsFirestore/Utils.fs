@@ -5,6 +5,25 @@ module internal Utils =
     open Google.Cloud.Firestore
     open FsFirestore.Types
 
+    /// Deserializes a given snapshot ('T).
+    let internal deserializeSnapshot<'T when 'T : not struct> (snapshot: DocumentSnapshot) = 
+        let doc = snapshot.ConvertTo<'T>()
+
+        match box doc with
+        | :? FirestoreDocument as fireDoc ->
+            fireDoc.Id           <- snapshot.Reference.Id
+            fireDoc.CollectionId <- snapshot.Reference.Parent.Id
+
+            doc
+
+        | _ -> 
+            doc
+
+    /// Deserializes a given snapshots ('T).
+    let internal deserializeSnapshots<'T when 'T : not struct> snapshots = 
+        snapshots
+        |> Seq.map (fun snap -> (deserializeSnapshot<'T> snap))
+
     /// Returns a collection from the DB with a given name.
     let internal getCollection (db: FirestoreDb) name =
         db.Collection(name)
@@ -36,10 +55,10 @@ module internal Utils =
         ids |> Seq.map (fun id -> (getDoc id collection))
         
     /// Creates a document with a given ID in a given collection.
-    let internal createDoc id doc (collection: CollectionReference) =
+    let internal createDoc id data (collection: CollectionReference) =
         let docRef = collection.Document(id)
 
-        docRef.CreateAsync(doc)
+        docRef.CreateAsync(data)
         |> Async.AwaitTask
         |> Async.RunSynchronously
         |> ignore
@@ -47,16 +66,16 @@ module internal Utils =
         docRef
     
     /// Adds a document with a automatically generated ID to a given collection.
-    let internal addDoc doc (collection: CollectionReference) =
-        collection.AddAsync(doc)
+    let internal addDoc data (collection: CollectionReference) =
+        collection.AddAsync(data)
         |> Async.AwaitTask
         |> Async.RunSynchronously
 
     /// Sets a document content with a given ID in a given collection.
-    let internal setDoc id doc (collection: CollectionReference) =
+    let internal setDoc id data (collection: CollectionReference) =
         let docRef = getDoc id collection
 
-        docRef.SetAsync(doc, SetOptions.MergeAll)
+        docRef.SetAsync(data, SetOptions.MergeAll)
         |> Async.AwaitTask
         |> Async.RunSynchronously
         |> ignore
@@ -71,23 +90,3 @@ module internal Utils =
         |> Async.AwaitTask
         |> Async.RunSynchronously
         |> ignore
-
-    /// Deserializes a given snapshot ('T).
-    let internal deserializeSnapshot<'T when 'T : not struct> (snapshot: DocumentSnapshot) = 
-        let doc = snapshot.ConvertTo<'T>()
-
-        match box doc with
-        | :? FirestoreDocument as fireDoc ->
-            fireDoc.id           <- snapshot.Reference.Id
-            fireDoc.collectionId <- snapshot.Reference.Parent.Id
-
-            doc
-
-        | _ -> 
-            doc
-
-    /// Deserializes a given snapshots ('T).
-    let internal deserializeSnapshots<'T when 'T : not struct> snapshots = 
-        snapshots
-        |> Seq.map (fun snap -> (deserializeSnapshot<'T> snap))
-

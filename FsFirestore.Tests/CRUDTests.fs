@@ -2,7 +2,6 @@
 
 module CRUDTests =
 
-    open System.Threading
     open Xunit
     open FsFirestore.Firestore
     open Config
@@ -22,12 +21,12 @@ module CRUDTests =
         let testData = new Test()
 
         // Test.
-        let doc = addDocument CRUDCollection testData
+        let doc = addDocument CRUDCollection None testData
         let docData = convertTo<Test> doc
 
         Assert.NotNull(doc.Id)
         Assert.Equal(CRUDCollection, doc.Parent.Id)
-        Assert.Equal<obj[]>(testData.allFields, docData.allFields)
+        Assert.Equal<obj[]>(testData.AllFields, docData.AllFields)
 
         // Tear down.
         deleteDocument CRUDCollection doc.Id
@@ -37,22 +36,22 @@ module CRUDTests =
     [<InlineData("test-1")>]
     [<InlineData("test-2")>]
     [<InlineData("1234")>]
-    let ``Add document with given ID`` (docId) =
+    let ``Add document with given ID`` (docId: string) =
         // Build up.
         connectToFirestore findGCPAuthentication |> ignore
         let testData = new Test()
 
         // Test.
-        let doc = addDocumentWithId CRUDCollection docId testData
+        let doc = addDocument CRUDCollection (Some docId) testData
         let docData = convertTo<Test> doc
 
         Assert.NotNull(doc.Id)
         Assert.Equal(docId, doc.Id)
         Assert.Equal(CRUDCollection, doc.Parent.Id)
-        Assert.Equal<obj[]>(testData.allFields, docData.allFields)
+        Assert.Equal<obj[]>(testData.AllFields, docData.AllFields)
 
         // Tear down.
-        deleteDocument CRUDCollection docId
+        deleteDocument CRUDCollection doc.Id
 
     /// Update a document in the Firestore DB test.
     [<Theory>]
@@ -62,7 +61,7 @@ module CRUDTests =
     let ``Update document`` (updateStr, updateNum) =
         // Build up.
         connectToFirestore findGCPAuthentication |> ignore
-        let doc = addDocument CRUDCollection (new Test())
+        let doc = addDocument CRUDCollection None (new Test())
         let docData = convertTo<Test> doc
 
         // Test.
@@ -85,13 +84,13 @@ module CRUDTests =
         // Build up.
         connectToFirestore findGCPAuthentication |> ignore
         let testData = new Test() 
-        let docRef = addDocument CRUDCollection testData
+        let docRef = addDocument CRUDCollection None testData
 
         // Test.
         let docData = document<Test> CRUDCollection docRef.Id
 
         Assert.NotNull(docData)
-        Assert.Equal<obj[]>(testData.allFields, docData.allFields)
+        Assert.Equal<obj[]>(testData.AllFields, docData.AllFields)
 
         // Tear down.
         deleteDocument CRUDCollection docRef.Id
@@ -110,7 +109,7 @@ module CRUDTests =
         let dataList = createTestData numOfDocs
 
         // Add the data to the DB.
-        let docIds = dataList |> List.map (fun data -> (addDocument CRUDCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument CRUDCollection None data).Id)
 
         // Test.
         let docs = documents<Test> CRUDCollection docIds |> List.ofSeq
@@ -118,7 +117,7 @@ module CRUDTests =
         
         let sortedDocs = docs |> List.sortBy (fun doc -> doc.num)
         let sortedDataList = dataList |> List.sortBy (fun doc -> doc.num)
-        List.iter2 (fun (createdData: Test) (docData: Test) -> Assert.Equal<obj[]>(createdData.allFields, docData.allFields)) sortedDataList sortedDocs
+        List.iter2 (fun (createdData: Test) (docData: Test) -> Assert.Equal<obj[]>(createdData.AllFields, docData.AllFields)) sortedDataList sortedDocs
 
         // Tear down.
         deleteDocuments CRUDCollection docIds
@@ -130,7 +129,7 @@ module CRUDTests =
     
         // Create test data and add it to the collection.
         let dataList = createTestData 5
-        let docIds = dataList |> List.map (fun data -> (addDocument CRUDCollection data).Id)
+        let docIds = dataList |> List.map (fun data -> (addDocument CRUDCollection None data).Id)
         
         // Test.
         let docs = allDocuments<Test> CRUDCollection |> List.ofSeq
@@ -138,7 +137,7 @@ module CRUDTests =
 
         let sortedDocs = docs |> List.sortBy (fun doc -> doc.num)
         let sortedDataList = dataList |> List.sortBy (fun doc -> doc.num)
-        List.iter2 (fun (createdData: Test) (docData: Test) -> Assert.Equal<obj[]>(createdData.allFields, docData.allFields)) sortedDataList sortedDocs
+        List.iter2 (fun (createdData: Test) (docData: Test) -> Assert.Equal<obj[]>(createdData.AllFields, docData.AllFields)) sortedDataList sortedDocs
 
         // Tear down.
         deleteDocuments CRUDCollection docIds
@@ -148,7 +147,7 @@ module CRUDTests =
     let ``Delete document`` () =
         // Build up.
         connectToFirestore findGCPAuthentication |> ignore
-        let doc = addDocument CRUDCollection (new Test())
+        let doc = addDocument CRUDCollection None (new Test())
 
         // Test.
         deleteDocument CRUDCollection doc.Id
@@ -172,7 +171,7 @@ module CRUDTests =
         let dataList = createTestData numOfDocs
 
         // Add the data to the DB.
-        let docIds = dataList |> List.map(fun data -> (addDocument CRUDCollection data).Id)
+        let docIds = dataList |> List.map(fun data -> (addDocument CRUDCollection None data).Id)
 
         // Test.
         deleteDocuments CRUDCollection docIds

@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.FSharpLu" Version="0.10.27" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FsFirestore.Tests\FsFirestore.Tests.fsproj" />
     <ProjectReference Include="..\FsFirestore\FsFirestore.fsproj" />
   </ItemGroup>

@@ -15,6 +15,9 @@ module Config =
     [<Literal>]    
     let QueryCollection = "query-tests"
 
+    [<Literal>]
+    let TransCollection = "trans-tests"
+
     /// Test class to be used as a model for the  tests.
     [<FirestoreData>]
     type Test() =

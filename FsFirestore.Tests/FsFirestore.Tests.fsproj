@@ -11,6 +11,7 @@
     <Compile Include="Data.fs" />
     <Compile Include="QueryTests.fs" />
     <Compile Include="CRUDTests.fs" />
+    <Compile Include="TransactionTests.fs"/>
   </ItemGroup>
 
   <ItemGroup>
