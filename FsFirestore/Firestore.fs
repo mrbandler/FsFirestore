@@ -1,5 +1,6 @@
 namespace FsFirestore
 
+/// Contains all relevant functions for basic CRUD operations in Firestore.
 module Firestore =    
 
     open Google.Cloud.Firestore
@@ -19,17 +20,22 @@ module Firestore =
             | None -> 
                 false
             
-    /// Deserializes a given document snapshot ('T).
+    /// Converts a given document snapshot to a given type.
     let convertSnapshotTo<'T when 'T : not struct> (snap: DocumentSnapshot) =
         snap
         |> deserializeSnapshot<'T>
 
-    /// Deserializes a given document ('T).
-    let convertTo<'T when 'T : not struct> (doc: DocumentReference) =
+    /// Converts given document snapshots to a given type.
+    let convertSnapshotsTo<'T when 'T : not struct> (snaps: DocumentSnapshot seq) =
+        snaps
+        |> deserializeSnapshots<'T>
+
+    /// Converts a given document to a type.
+    let convertTo<'T when 'T : not struct> doc =
         getDocSnapshot doc
         |> convertSnapshotTo<'T>
 
-    /// Deserializes a given documents ('T).
+    /// Converts given documents to a type.
     let convertToMulti<'T when 'T : not struct> docs =
         docs
         |> Seq.map (fun doc -> (convertTo<'T> doc))
@@ -39,7 +45,7 @@ module Firestore =
         getCollection db name
     
     /// Executes a given query.
-    let execQuery<'T when 'T : not struct> (query: Query) =
+    let execQuery<'T when 'T : not struct> query =
         (getQuerySnapshot query).Documents
         |> deserializeSnapshots<'T>
 
@@ -82,12 +88,12 @@ module Firestore =
         |> setDoc id data
 
     /// Deletes a document in a collection.
-    let deleteDocument (precondition: Precondition option) col id =
+    let deleteDocument precondition col id =
         collection col 
         |> deleteDoc precondition id
 
     /// Deletes multiple documents in a collection.
-    let deleteDocuments (precondition: Precondition option) col (ids: string seq) =
+    let deleteDocuments precondition col (ids: string seq) =
         ids
         |>Seq.iter (deleteDocument precondition col)
 

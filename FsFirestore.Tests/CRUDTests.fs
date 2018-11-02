@@ -1,13 +1,11 @@
-﻿namespace FsFirestore.Tests
+﻿ namespace FsFirestore.Tests
 
 module CRUDTests =
 
     open Xunit
-    open Google.Cloud.Firestore
     open FsFirestore.Firestore
     open Config
     open Data
-    open System
 
     /// Init firestore connection test.
     [<Fact>]
@@ -67,15 +65,15 @@ module CRUDTests =
         let docData = convertTo<Test> doc
 
         // Test.
-        docData.str <- updateStr
-        docData.num <- updateNum
+        docData.Str <- updateStr
+        docData.Num <- updateNum
         updateDocument doc.Parent.Id doc.Id docData |> ignore
         let docUpdatedData = convertTo<Test> doc
         
-        Assert.Equal(updateStr, docUpdatedData.str)
-        Assert.Equal(docData.str, docUpdatedData.str)   
-        Assert.Equal(updateNum, docUpdatedData.num)
-        Assert.Equal(docData.num, docUpdatedData.num)
+        Assert.Equal(updateStr, docUpdatedData.Str)
+        Assert.Equal(docData.Str, docUpdatedData.Str)   
+        Assert.Equal(updateNum, docUpdatedData.Num)
+        Assert.Equal(docData.Num, docUpdatedData.Num)
 
         // Tear down.
         deleteDocument None CRUDCollection doc.Id
@@ -117,8 +115,8 @@ module CRUDTests =
         let docs = documents<Test> CRUDCollection docIds |> List.ofSeq
         Assert.NotEmpty(docs)
         
-        let sortedDocs = docs |> List.sortBy (fun doc -> doc.num)
-        let sortedDataList = dataList |> List.sortBy (fun doc -> doc.num)
+        let sortedDocs = docs |> List.sortBy (fun doc -> doc.Num)
+        let sortedDataList = dataList |> List.sortBy (fun doc -> doc.Num)
         List.iter2 (fun (createdData: Test) (docData: Test) -> Assert.Equal<obj[]>(createdData.AllFields, docData.AllFields)) sortedDataList sortedDocs
 
         // Tear down.
@@ -137,8 +135,8 @@ module CRUDTests =
         let docs = allDocuments<Test> CRUDCollection |> List.ofSeq
         Assert.NotEmpty(docs)
 
-        let sortedDocs = docs |> List.sortBy (fun doc -> doc.num)
-        let sortedDataList = dataList |> List.sortBy (fun doc -> doc.num)
+        let sortedDocs = docs |> List.sortBy (fun doc -> doc.Num)
+        let sortedDataList = dataList |> List.sortBy (fun doc -> doc.Num)
         List.iter2 (fun (createdData: Test) (docData: Test) -> Assert.Equal<obj[]>(createdData.AllFields, docData.AllFields)) sortedDataList sortedDocs
 
         // Tear down.

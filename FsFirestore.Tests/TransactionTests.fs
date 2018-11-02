@@ -20,10 +20,10 @@ module TransactionTests =
         let testData = new Test()
 
         // Test.
-        let transFunc (trans: Transaction) =
+        let transaction (trans: Transaction) =
             addDocumentInTrans trans TransCollection docId testData
 
-        let doc = runTransaction transFunc
+        let doc = runTransaction transaction
         let docData = convertTo<Test> doc
 
         Assert.NotNull(docData)
@@ -46,19 +46,19 @@ module TransactionTests =
         let docData = convertTo<Test> doc
 
         // Test.
-        let transFunc (trans: Transaction) =
-            docData.str <- updateStr
-            docData.num <- updateNum
+        let transaction (trans: Transaction) =
+            docData.Str <- updateStr
+            docData.Num <- updateNum
             updateDocumentInTrans trans doc.Parent.Id doc.Id docData
 
-        let docUpdated = runTransaction transFunc
+        let docUpdated = runTransaction transaction
         let docUpdatedData = convertTo<Test> docUpdated
         
         Assert.NotNull(docUpdated)
-        Assert.Equal(updateStr, docUpdatedData.str)
-        Assert.Equal(docData.str, docUpdatedData.str)   
-        Assert.Equal(updateNum, docUpdatedData.num)
-        Assert.Equal(docData.num, docUpdatedData.num)
+        Assert.Equal(updateStr, docUpdatedData.Str)
+        Assert.Equal(docData.Str, docUpdatedData.Str)   
+        Assert.Equal(updateNum, docUpdatedData.Num)
+        Assert.Equal(docData.Num, docUpdatedData.Num)
 
         // Tear down.
         deleteDocument None TransCollection doc.Id
@@ -72,10 +72,10 @@ module TransactionTests =
         let docRef = addDocument TransCollection None testData
 
         // Test.
-        let transFunc (trans: Transaction) =
+        let transaction (trans: Transaction) =
             documentInTrans<Test> trans TransCollection docRef.Id
 
-        let docData = runTransaction transFunc
+        let docData = runTransaction transaction
 
         Assert.NotNull(docData)
         Assert.Equal<obj[]>(testData.AllFields, docData.AllFields)
@@ -99,15 +99,15 @@ module TransactionTests =
         let docIds = dataList |> List.map (fun data -> (addDocument TransCollection None data).Id)
 
         // Test.
-        let transFunc (trans: Transaction) =
+        let transaction (trans: Transaction) =
             documentsInTrans<Test> trans TransCollection docIds |> List.ofSeq
         
-        let docs = runTransaction transFunc
+        let docs = runTransaction transaction
         
         Assert.NotEmpty(docs)
 
-        let sortedDocs = docs |> List.sortBy (fun doc -> doc.num)
-        let sortedDataList = dataList |> List.sortBy (fun doc -> doc.num)
+        let sortedDocs = docs |> List.sortBy (fun doc -> doc.Num)
+        let sortedDataList = dataList |> List.sortBy (fun doc -> doc.Num)
         List.iter2 (fun (createdData: Test) (docData: Test) -> Assert.Equal<obj[]>(createdData.AllFields, docData.AllFields)) sortedDataList sortedDocs
 
         // Tear down.
@@ -121,10 +121,10 @@ module TransactionTests =
         let doc = addDocument TransCollection None (new Test())
 
         // Test.
-        let transFunc (trans: Transaction) =
+        let transaction (trans: Transaction) =
             deleteDocumentInTrans trans None TransCollection doc.Id
 
-        runTransaction transFunc
+        runTransaction transaction
         let docAfterDel = document<Test> TransCollection doc.Id
 
         Assert.Null(docAfterDel)
@@ -148,10 +148,10 @@ module TransactionTests =
         let docIds = dataList |> List.map(fun data -> (addDocument TransCollection None data).Id)
 
         // Test.
-        let transFunc (trans: Transaction) =
+        let transaction (trans: Transaction) =
             deleteDocumentsInTrans trans None TransCollection docIds
 
-        runTransaction transFunc
+        runTransaction transaction
         let docsAfterDel = documents<Test> TransCollection docIds
 
         docsAfterDel
