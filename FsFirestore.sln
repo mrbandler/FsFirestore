@@ -7,7 +7,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "FsFirestore", "FsFirestore\
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "FsFirestore.Tests", "FsFirestore.Tests\FsFirestore.Tests.fsproj", "{7AFC7D42-52EB-4583-8764-8F7222F4CD23}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsFirestore.Console", "FsFirestore.Console\FsFirestore.Console.fsproj", "{72687A53-C67E-4F44-8391-DA2170674D9B}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "FsFirestore.Console", "FsFirestore.Console\FsFirestore.Console.fsproj", "{72687A53-C67E-4F44-8391-DA2170674D9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

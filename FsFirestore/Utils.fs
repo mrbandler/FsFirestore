@@ -13,7 +13,6 @@ module internal Utils =
         | :? FirestoreDocument as fireDoc ->
             fireDoc.Id           <- snapshot.Reference.Id
             fireDoc.CollectionId <- snapshot.Reference.Parent.Id
-
             doc
 
         | _ -> 

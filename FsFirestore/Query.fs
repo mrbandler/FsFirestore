@@ -1,5 +1,6 @@
 ﻿namespace FsFirestore
 
+/// Contains all relevant functions for Firestore queries.
 module Query =
     
     open System

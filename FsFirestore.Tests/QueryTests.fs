@@ -22,11 +22,11 @@ module QueryTests =
         let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
-        let endAtData = dataList |> List.find (fun data -> data.num = endAtNum)
+        let endAtData = dataList |> List.find (fun data -> data.Num = endAtNum)
         let queryResult = 
             collection QueryCollection
-            |> orderBy "num"
-            |> endAt (endAtData.Fields("num"))
+            |> orderBy "Num"
+            |> endAt (endAtData.Fields("Num"))
             |> execQuery<Test>
             |> List.ofSeq
 
@@ -51,11 +51,11 @@ module QueryTests =
         let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
-        let endAtData = dataList |> List.find (fun data -> data.num = endBeforeNum)
+        let endAtData = dataList |> List.find (fun data -> data.Num = endBeforeNum)
         let queryResult = 
             collection QueryCollection
-            |> orderBy "num"
-            |> endBefore (endAtData.Fields("num"))
+            |> orderBy "Num"
+            |> endBefore (endAtData.Fields("Num"))
             |> execQuery<Test>
             |> List.ofSeq
 
@@ -80,11 +80,11 @@ module QueryTests =
         let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
-        let endAtData = dataList |> List.find (fun data -> data.num = startAtNum)
+        let endAtData = dataList |> List.find (fun data -> data.Num = startAtNum)
         let queryResult = 
             collection QueryCollection
-            |> orderBy "num"
-            |> startAt (endAtData.Fields("num"))
+            |> orderBy "Num"
+            |> startAt (endAtData.Fields("Num"))
             |> execQuery<Test>
             |> List.ofSeq
 
@@ -109,11 +109,11 @@ module QueryTests =
         let docIds = dataList |> List.map (fun data -> (addDocument QueryCollection None data).Id)
 
         // Test.
-        let endAtData = dataList |> List.find (fun data -> data.num = startAfterNum)
+        let endAtData = dataList |> List.find (fun data -> data.Num = startAfterNum)
         let queryResult = 
             collection QueryCollection
-            |> orderBy "num"
-            |> startAfter (endAtData.Fields("num"))
+            |> orderBy "Num"
+            |> startAfter (endAtData.Fields("Num"))
             |> execQuery<Test>
             |> List.ofSeq
 
@@ -189,14 +189,14 @@ module QueryTests =
         // Test.
         let queryResult =
             collection QueryCollection
-            |> orderBy "num"
+            |> orderBy "Num"
             |> execQuery<Test>
             |> List.ofSeq
 
         Assert.NotEmpty(queryResult)
         Assert.Equal(queryResult.Length, numOfDocs)
         
-        let isAscOrdered = queryResult |> List.pairwise |> List.forall (fun (a, b) -> a.num <= b.num)
+        let isAscOrdered = queryResult |> List.pairwise |> List.forall (fun (a, b) -> a.Num <= b.Num)
         Assert.Equal(isAscOrdered, true)
 
         // Tear down.
@@ -216,14 +216,14 @@ module QueryTests =
         // Test.
         let queryResult =
             collection QueryCollection
-            |> orderByDescending "num"
+            |> orderByDescending "Num"
             |> execQuery<Test>
             |> List.ofSeq
 
         Assert.NotEmpty(queryResult)
         Assert.Equal(queryResult.Length, numOfDocs)
         
-        let isDescOrdered = queryResult |> List.pairwise |> List.forall (fun (a, b) -> a.num >= b.num)
+        let isDescOrdered = queryResult |> List.pairwise |> List.forall (fun (a, b) -> a.Num >= b.Num)
         Assert.Equal(isDescOrdered, true)
 
         // Tear down.
@@ -242,14 +242,14 @@ module QueryTests =
         // Test.
         let queryResult =
             collection QueryCollection
-            |> select [|"num"|]
+            |> select [|"Num"|]
             |> execQuery<Test>
             |> List.ofSeq
 
         Assert.NotEmpty(queryResult)
         Assert.Equal(queryResult.Length, numOfDocs)
-        queryResult |> List.iter (fun doc -> Assert.NotNull(doc.num))
-        queryResult |> List.iter (fun doc -> Assert.Equal("", doc.str))
+        queryResult |> List.iter (fun doc -> Assert.NotNull(doc.Num))
+        queryResult |> List.iter (fun doc -> Assert.Equal("", doc.Str))
 
         // Tear down.
         deleteDocuments None QueryCollection docIds
@@ -269,13 +269,13 @@ module QueryTests =
         // Test.
         let queryResult =
             collection QueryCollection
-            |> whereArrayContains "arr" arrayContainsValue
+            |> whereArrayContains "Arr" arrayContainsValue
             |> execQuery<Test>
             |> List.ofSeq
 
         Assert.NotEmpty(queryResult)
         Assert.Equal(queryResult.Length, numOfDocs - (arrayContainsValue - 1))
-        queryResult |> List.iter (fun doc ->  Assert.True(doc.arr |> Array.contains arrayContainsValue))
+        queryResult |> List.iter (fun doc ->  Assert.True(doc.Arr |> Array.contains arrayContainsValue))
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
 
         // Tear down.
@@ -295,14 +295,14 @@ module QueryTests =
         // Test.
         let queryResult =
             collection QueryCollection
-            |> whereEqualTo "num" selectNum
+            |> whereEqualTo "Num" selectNum
             |> execQuery<Test>
             |> List.ofSeq
 
         Assert.NotEmpty(queryResult)
         Assert.Equal(queryResult.Length, 1)
 
-        let doc = queryResult |> List.find (fun doc -> doc.num = selectNum)
+        let doc = queryResult |> List.find (fun doc -> doc.Num = selectNum)
         Assert.NotNull(doc)
 
         // Tear down.
@@ -322,12 +322,12 @@ module QueryTests =
         // Test.
         let queryResult =
             collection QueryCollection
-            |> whereGreaterThen "num" greaterThenNum
+            |> whereGreaterThen "Num" greaterThenNum
             |> execQuery<Test>
             |> List.ofSeq
 
         Assert.NotEmpty(queryResult)
-        let filteredDocs = queryResult |> List.filter (fun doc -> doc.num > greaterThenNum)
+        let filteredDocs = queryResult |> List.filter (fun doc -> doc.Num > greaterThenNum)
         Assert.Equal(queryResult.Length, filteredDocs.Length)
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
  
@@ -348,12 +348,12 @@ module QueryTests =
         // Test.
         let queryResult =
             collection QueryCollection
-            |> whereGreaterThenOrEqualTo "num" greaterThenOrEqualNum
+            |> whereGreaterThenOrEqualTo "Num" greaterThenOrEqualNum
             |> execQuery<Test>
             |> List.ofSeq
 
         Assert.NotEmpty(queryResult)
-        let filteredDocs = queryResult |> List.filter (fun doc -> doc.num >= greaterThenOrEqualNum)
+        let filteredDocs = queryResult |> List.filter (fun doc -> doc.Num >= greaterThenOrEqualNum)
         Assert.Equal(queryResult.Length, filteredDocs.Length)
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
  
@@ -374,12 +374,12 @@ module QueryTests =
         // Test.
         let queryResult =
             collection QueryCollection
-            |> whereLessThen "num" lessThenNum
+            |> whereLessThen "Num" lessThenNum
             |> execQuery<Test>
             |> List.ofSeq
 
         Assert.NotEmpty(queryResult)
-        let filteredDocs = queryResult |> List.filter (fun doc -> doc.num < lessThenNum)
+        let filteredDocs = queryResult |> List.filter (fun doc -> doc.Num < lessThenNum)
         Assert.Equal(queryResult.Length, filteredDocs.Length)
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
  
@@ -400,12 +400,12 @@ module QueryTests =
         // Test.
         let queryResult =
             collection QueryCollection
-            |> whereLessThenOrEqualTo "num" lessThenOrEqualNum
+            |> whereLessThenOrEqualTo "Num" lessThenOrEqualNum
             |> execQuery<Test>
             |> List.ofSeq
 
         Assert.NotEmpty(queryResult)
-        let filteredDocs = queryResult |> List.filter (fun doc -> doc.num <= lessThenOrEqualNum)
+        let filteredDocs = queryResult |> List.filter (fun doc -> doc.Num <= lessThenOrEqualNum)
         Assert.Equal(queryResult.Length, filteredDocs.Length)
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))
  
@@ -426,18 +426,18 @@ module QueryTests =
         // Test.
         let queryResult =
             collection QueryCollection
-            |> whereGreaterThen "num" greaterThenNum
-            |> whereLessThen "num" lessThenNum
-            |> orderBy "num"
+            |> whereGreaterThen "Num" greaterThenNum
+            |> whereLessThen "Num" lessThenNum
+            |> orderBy "Num"
             |> execQuery<Test>
             |> List.ofSeq
 
         Assert.NotEmpty(queryResult)
         
-        let filteredDocs = queryResult |> List.filter (fun doc -> doc.num > greaterThenNum && doc.num < lessThenNum)
+        let filteredDocs = queryResult |> List.filter (fun doc -> doc.Num > greaterThenNum && doc.Num < lessThenNum)
         Assert.Equal(queryResult.Length, filteredDocs.Length)
         
-        let isAscOrdered = queryResult |> List.pairwise |> List.forall (fun (a, b) -> a.num <= b.num)
+        let isAscOrdered = queryResult |> List.pairwise |> List.forall (fun (a, b) -> a.Num <= b.Num)
         Assert.Equal(isAscOrdered, true)
 
         queryResult |> List.iter (fun doc -> Assert.NotNull(doc))

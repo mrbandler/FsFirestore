@@ -1,7 +1,4 @@
-﻿// Learn more about F# at http://fsharp.org
-
-open System
-open FsFirestore.Console
+﻿open FsFirestore.Console
 
 [<EntryPoint>]
 let main argv =

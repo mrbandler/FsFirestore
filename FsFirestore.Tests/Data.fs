@@ -2,18 +2,35 @@
 
 module Data =
 
-    open FsFirestore.Tests.Config
     open System
+    open Google.Cloud.Firestore
+    open FsFirestore.Types
+
+    /// Test class to be used as a model for the  tests.
+    [<FirestoreData>]
+    type Test() =
+        inherit FirestoreDocument()
+
+        [<FirestoreProperty>]
+        member val Str: string = "" with get, set 
+
+        [<FirestoreProperty>]
+        member val Num: int = 0 with get, set
+
+        [<FirestoreProperty>]
+        member val Arr: int[] = [| |] with get, set
+
+        member this.Fill =
+            this.Str <- "The answer is ..."
+            this.Num <- 42
+            this.Arr <- [| for i in 1 .. this.Num -> i |]
 
     /// Fills the array in the given test data set.
     let private fillArray (dataList: Test list) =
-        let length = dataList.Length
+        dataList
+        |> List.iter (fun data -> data.Arr <- [| for i in 1 .. data.Num -> i |])
         
         dataList
-        |> List.iter (fun data -> data.arr <- [| for i in 1 .. data.num -> i |])
-        
-        dataList
-
 
     /// Shuffles an array in place.
     let private shuffleInPlace (array : 'a[]) =
@@ -34,8 +51,8 @@ module Data =
         else
             let internalCounter = counter + 1
             let data = new Test()
-            data.str <- internalCounter.ToString()
-            data.num <- internalCounter
+            data.Str <- internalCounter.ToString()
+            data.Num <- internalCounter
 
             createData max internalCounter (List.append list [data])
 

@@ -4,33 +4,22 @@ module Config =
     
     open System.IO
     open System
-    open Google.Cloud.Firestore
-    open FsFirestore.Types
 
-    /// Collection name used by the CRUD tests.
+    /// Collection ID used for the CRUD tests.
     [<Literal>]    
     let CRUDCollection = "crud-tests"
 
-    /// Collection name used by the query tests.
+    /// Collection ID used for the query tests.
     [<Literal>]    
     let QueryCollection = "query-tests"
 
+    /// Collection ID used for the transaction tests.
     [<Literal>]
     let TransCollection = "trans-tests"
 
-    /// Test class to be used as a model for the  tests.
-    [<FirestoreData>]
-    type Test() =
-        inherit FirestoreDocument()
-
-        [<FirestoreProperty>]
-        member val str: string = "" with get, set 
-
-        [<FirestoreProperty>]
-        member val num: int = 0 with get, set
-
-        [<FirestoreProperty>]
-        member val arr: int[] = [| |] with get, set
+    /// Collection ID used for the transaction tests.
+    [<Literal>]
+    let ListenCollection = "listen-tests"
             
     /// Finds GCP authentication path.
     let findGCPAuthentication =

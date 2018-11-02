@@ -1,5 +1,6 @@
 ﻿namespace FsFirestore
 
+/// Contains all relevant functions for Firestore transactions.
 module Transaction =
     
     open Google.Cloud.Firestore
