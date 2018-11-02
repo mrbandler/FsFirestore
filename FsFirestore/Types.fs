@@ -34,3 +34,11 @@ module Types =
             this.GetFirestoreProperties
             |> Array.filter (fun (prop: PropertyInfo) -> names |> Array.contains prop.Name)
             |> Array.map (fun (prop: PropertyInfo) -> (prop.GetValue(this)))           
+
+    /// Generic query change type.
+    type DocumentChange<'T when 'T : not struct> = {
+        document: 'T
+        changeType: DocumentChange.Type
+        newIndex: int option
+        oldIndex: int option
+    }

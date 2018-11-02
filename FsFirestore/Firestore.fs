@@ -4,6 +4,7 @@ namespace FsFirestore
 module Firestore =    
 
     open Google.Cloud.Firestore
+    open FsFirestore.Types
     open FsFirestore.Env
     open FsFirestore.Utils
 
@@ -19,7 +20,7 @@ module Firestore =
 
             | None -> 
                 false
-            
+
     /// Converts a given document snapshot to a given type.
     let convertSnapshotTo<'T when 'T : not struct> (snap: DocumentSnapshot) =
         snap
@@ -40,10 +41,15 @@ module Firestore =
         docs
         |> Seq.map (fun doc -> (convertTo<'T> doc))
 
+    /// Converts query changes.
+    let convertQueryChanges<'T when 'T : not struct> (changes: DocumentChange seq) =
+        changes
+        |> Seq.map convertDocumentChange<'T>
+
     /// Returns a collection from the DB with a given name.
     let collection name =
         getCollection db name
-    
+
     /// Executes a given query.
     let execQuery<'T when 'T : not struct> query =
         (getQuerySnapshot query).Documents
