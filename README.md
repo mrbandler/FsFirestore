@@ -4,7 +4,7 @@
 
 [![pipeline status](https://gitlab.com/mrbandler/FsFirestore/badges/master/pipeline.svg)](https://gitlab.com/mrbandler/FsFirestore/commits/master) [![NuGet Badge](https://buildstats.info/nuget/FsFirestore?includePreReleases=true)](https://www.nuget.org/packages/FsFirestore)
 
-**Functional F# library to access Firestore database via Google Cloud Platform (GCP) or Firebase Project.**
+**Functional F# library to access Firestore database hosted on Google Cloud Platform (GCP) or Firebase.**
 
 ## Table Of Content
 1. [Usage](#1-usage) ⌨️
@@ -104,11 +104,10 @@ open Google.Cloud.Firestore
 open FsFirestore.Firestore
 open FsFirestore.Query
 
-// To query a collection we first need to retrieve it from
-// Firestore
+// To query a collection we first need to retrieve it from Firestore
 let queryCollection = collection "addresses"
 
-// Now we can chain conditions togehter.
+// Now we can chain conditions.
 // Let's query all addresses in Pennsylvania Avenue, DC up to POTUS's one.
 let addresses = 
     queryCollection
@@ -183,9 +182,9 @@ open Google.Cloud.Firestore
 open FsFirestore.Transaction
 
 // Reading a document works just as aspected only with the minor difference
-// to use the transaction specific function within the Transaction module.
+// to use the transaction specific function from the Transaction module.
 let transactionFunc (trans: Transaction) =
-	documentInTrans<Test> trans "addresses" "POTUS-address"
+	documentInTrans<Address> trans "addresses" "POTUS-address"
 	
 // Now let's run the transaction.
 // Notice that the transaction will return the return value from the actual transaction
@@ -208,7 +207,7 @@ open FsFirestore.Transaction
 // Let's create the model that we want to add to Firestore
 let address = new Address()
 
-// Now let's write a transaction to add the to Firestore with a given 
+// Now let's write a transaction to add an address to Firestore with a given 
 // collection name and ID.
 let transactionFunc (trans: Transaction) =
 	addDocumentInTrans trans "addresses" (Some "POTUS-address") address
@@ -218,7 +217,7 @@ let docRef = runTransaction transactionFunc
 
 // -- or --
 
-// We can also add the address and let the ID be generated automatically.
+// Of course, we can also add the address and let the ID be generated automatically.
 let transactionFunc (trans: Transaction) =
 	addDocumentInTrans trans "addresses" None address
 ```
@@ -231,14 +230,14 @@ open FsFirestore.Firestore
 
 // Let's create our update transaction.
 let transactionFunc (trans: Transaction) =
-    // We can first the read the document we want to update 
+    // We can first read the document we want to update 
     // from Firestore.
 	let address = documentInTrans<Address> trans "addresses" "POTUS-address"
 	
     // Now let's move the presidents house number along one number.
     address.HouseNo <- 1601
 
-    // And update the document within Firestore.
+    // And update the document.
     updateDocumentInTrans trans "addresses" "POTUS-address" address
     
 // Let's run the transaction.
@@ -272,9 +271,105 @@ let transactionFunc (trans: Transaction) =
 runTransaction transactionFunc
 ```
 
-### Listening for Document Changes (Streaming API)
+### Listening for Changes
 
-> **TODO:** The streaming API will be added soon... Stay tuned!
+Firestore provides the ability to use a streaming API that let's you listen to changes made do specific documents or a complete set of documents managed by a query.
+
+The listener functions will be called on document creation, deletion and update. You can even specify a listener functions for none existing documents, this requires a named document ID before hand.
+
+#### Data Definition
+
+For the listening examples we will use different model classes.
+
+```fsharp
+open Google.Cloud.Firestore
+open FsFirestore.Types
+
+// Stores scores per user, the username will be the document ID.
+[<FirestoreData>]
+type Score() =
+	inherit FirestoreDocument() // Base class that comes with FsFirestore
+	
+	[<FirestoreProperty>]
+	member val BestScore = 0 with get, set
+
+	[<FirestoreProperty>]
+	member val LastScore = 0 with get, set
+	
+// Stores a list of usernames that have high scores.
+// A highscore is any score above 1000.
+[<FirestoreData>]
+type HighScores() =
+	inherit FirestoreDocument() // Base class that comes with FsFirestore
+	
+	[<FirestoreProperty>]
+	member val Usernames = [] with get, set
+```
+
+#### Mounting Listeners
+
+```fsharp
+open FsFirestore.Firestore
+open FsFirestore.Listening
+
+// To creater a listener it's as easy as writing a simple function,
+// as it practically is just a function.
+let callback (snap: DocumentSnapshot) =
+	if snap.Exists = true then
+		// The callback takes in a document snapshot, we can convert the snap
+		// to our model.
+		let score = convertSnapshotTo<Score> snap
+		
+		// Now we can use the listener to set the best score to the last score
+		// if it was better then the current best score.
+		if score.LastScore > score.BestScore then
+			score.BestScore <- score.LastScore
+			updateDocument score.CollectionId score.Ids score		
+		
+// Now we can simple mount our created listener callback and in 
+// turn receive a istener object from Firestore
+let listener = listenOnDocument "scores" "mrbandler" callback
+
+// If we want to stop listening we just stop listening.
+stopListening listener
+```
+
+#### Listening For Query Changes
+
+```fsharp
+open FsFirestore.Firestore
+open FsFirestore.Listening
+
+// Now we can use a listener to update a different document with the 
+// best high scores.
+let callback (querySnap: QuerySnapshot) =
+	// If the query changes the callback is called and we can retrieve the
+	// updated query results.
+	let scores = convertSnapshotsTo<Score> querySnap.Documents |> List.ofSeq
+	
+	// Now we can extract the usernames from the scores into an array.
+	let usernames =
+        scores
+        |> List.map (fun score -> score.Id)
+        |> Array.ofList
+	
+	// Let's update our highscores document with the new usernames.
+	let highScores = document<HighScores> "highscores" "users"
+	highScores.Usernames <- usernames
+	
+	updateDocument highScores.CollectionId highScores.Id highScores
+	
+// Now let's mount our created listener callback to a query.
+// We only want highscores that are above 1000, to be neat we also order them.
+let listener =
+	collection "scores"
+	|> whereGreaterThen "BestScore" 1000
+	|> orderBy "BestScore"
+	|> listenOnQuery callback
+
+// If we want to stop listening we just stop listening.
+stopListening listener
+```
 
 ### Async Functions
 
