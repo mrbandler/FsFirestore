@@ -371,6 +371,42 @@ let listener =
 stopListening listener
 ```
 
+In the above example we a simply retrieving all documents from the query which can be a lot of data. There is a way to only work with the changes from the query.
+
+```fsharp
+open FsFirestore.Firestore
+open FsFirestore.Listening
+
+// Now we can use a listener to update a different document with the 
+// best high scores.
+let callback (querySnap: QuerySnapshot) =
+	// If the query changes the callback is called and we can retrieve the
+	// updated query results.
+	let scoreChanges = convertQueryChanges<Score> querySnap.Changes |> List.ofSeq
+	
+	// Now we can extract the usernames from the scores into an array.
+	let usernames =
+        scores
+        |> List.map (fun score -> score.Id)
+        |> Array.ofList
+	
+	// Let's update our highscores document with the new usernames.
+	let highScores = document<HighScores> "highscores" "users"
+	Array.append highScores.Usernames usernames // Now instead of overwriting the all usernames we add to the array.
+	updateDocument highScores.CollectionId highScores.Id highScores
+	
+// Now let's mount our created listener callback to a query.
+// We only want highscores that are above 1000, to be neat we also order them.
+let listener =
+	collection "scores"
+	|> whereGreaterThen "BestScore" 1000
+	|> orderBy "BestScore"
+	|> listenOnQuery callback
+
+// If we want to stop listening we just stop listening.
+stopListening listener
+```
+
 ### Async Functions
 
 > **TODO:** The async API will be added soon... Stay tuned!
