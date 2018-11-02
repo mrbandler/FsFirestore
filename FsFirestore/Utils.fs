@@ -22,6 +22,15 @@ module internal Utils =
     let internal deserializeSnapshots<'T when 'T : not struct> snapshots = 
         snapshots
         |> Seq.map (fun snap -> (deserializeSnapshot<'T> snap))
+    
+    /// Converts a given document change
+    let internal convertDocumentChange<'T when 'T : not struct> (change: DocumentChange) =
+        {
+            document = change.Document |> deserializeSnapshot<'T>
+            changeType = change.ChangeType
+            newIndex = Option.ofNullable change.NewIndex
+            oldIndex = Option.ofNullable change.OldIndex
+        }
 
     /// Returns a collection from the DB with a given name.
     let internal getCollection (db: FirestoreDb) name =
