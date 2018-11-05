@@ -6,7 +6,6 @@ module Transaction =
     open Google.Cloud.Firestore
     open FsFirestore.Firestore
     open FsFirestore.Utils
-    open FsFirestore.TransUtils
 
     /// Runs a given transaction function in a Firestore transaction.
     let runTransaction<'T when 'T : not struct> (transactionFunc: Transaction -> 'T) =
