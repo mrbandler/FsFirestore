@@ -26,6 +26,8 @@ module CRUDTests =
 
         Assert.NotNull(doc.Id)
         Assert.Equal(CRUDCollection, doc.Parent.Id)
+        Assert.Equal(doc.Id, docData.Id)
+        Assert.Equal(CRUDCollection, docData.CollectionId)
         Assert.Equal<obj[]>(testData.AllFields, docData.AllFields)
 
         // Tear down.
@@ -48,6 +50,8 @@ module CRUDTests =
         Assert.NotNull(doc.Id)
         Assert.Equal(docId, doc.Id)
         Assert.Equal(CRUDCollection, doc.Parent.Id)
+        Assert.Equal(docId, docData.Id)
+        Assert.Equal(CRUDCollection, docData.CollectionId)
         Assert.Equal<obj[]>(testData.AllFields, docData.AllFields)
 
         // Tear down.

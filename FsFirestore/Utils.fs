@@ -5,18 +5,21 @@ module internal Utils =
     open Google.Cloud.Firestore
     open FsFirestore.Types
 
+    /// Sets Firestore properties on a given data object if it inherits from FirestoreDocument.
+    let internal setFirestoreProperties id col data =
+        match box data with
+            | :? FirestoreDocument as fireDoc ->
+                fireDoc.Id <- id
+                fireDoc.CollectionId <- col
+                data
+
+            | _ -> 
+                data
+
     /// Deserializes a given snapshot ('T).
     let internal deserializeSnapshot<'T when 'T : not struct> (snapshot: DocumentSnapshot) = 
-        let doc = snapshot.ConvertTo<'T>()
-
-        match box doc with
-        | :? FirestoreDocument as fireDoc ->
-            fireDoc.Id           <- snapshot.Reference.Id
-            fireDoc.CollectionId <- snapshot.Reference.Parent.Id
-            doc
-
-        | _ -> 
-            doc
+        snapshot.ConvertTo<'T>()
+        |> setFirestoreProperties snapshot.Reference.Id snapshot.Reference.Parent.Id
 
     /// Deserializes a given snapshots ('T).
     let internal deserializeSnapshots<'T when 'T : not struct> snapshots = 
@@ -71,13 +74,18 @@ module internal Utils =
         |> Async.RunSynchronously
         |> ignore
 
+        data |> setFirestoreProperties docRef.Id docRef.Parent.Id |> ignore
         docRef
     
     /// Adds a document with a automatically generated ID to a given collection.
     let internal addDoc data (collection: CollectionReference) =
-        collection.AddAsync(data)
-        |> Async.AwaitTask
-        |> Async.RunSynchronously
+        let docRef = 
+            collection.AddAsync(data)
+            |> Async.AwaitTask
+            |> Async.RunSynchronously
+
+        data |> setFirestoreProperties docRef.Id docRef.Parent.Id |> ignore
+        docRef
 
     /// Sets a document content with a given ID in a given collection.
     let internal setDoc id data (collection: CollectionReference) =
