@@ -5,18 +5,21 @@ module internal Utils =
     open Google.Cloud.Firestore
     open FsFirestore.Types
 
+    /// Sets Firestore properties on a given data object if it inherits from FirestoreDocument.
+    let internal setFirestoreProperties id col data =
+        match box data with
+            | :? FirestoreDocument as fireDoc ->
+                fireDoc.Id <- id
+                fireDoc.CollectionId <- col
+                data
+
+            | _ -> 
+                data
+
     /// Deserializes a given snapshot ('T).
     let internal deserializeSnapshot<'T when 'T : not struct> (snapshot: DocumentSnapshot) = 
-        let doc = snapshot.ConvertTo<'T>()
-
-        match box doc with
-        | :? FirestoreDocument as fireDoc ->
-            fireDoc.Id           <- snapshot.Reference.Id
-            fireDoc.CollectionId <- snapshot.Reference.Parent.Id
-            doc
-
-        | _ -> 
-            doc
+        snapshot.ConvertTo<'T>()
+        |> setFirestoreProperties snapshot.Reference.Id snapshot.Reference.Parent.Id
 
     /// Deserializes a given snapshots ('T).
     let internal deserializeSnapshots<'T when 'T : not struct> snapshots = 
@@ -71,13 +74,18 @@ module internal Utils =
         |> Async.RunSynchronously
         |> ignore
 
+        data |> setFirestoreProperties docRef.Id docRef.Parent.Id |> ignore
         docRef
     
     /// Adds a document with a automatically generated ID to a given collection.
     let internal addDoc data (collection: CollectionReference) =
-        collection.AddAsync(data)
-        |> Async.AwaitTask
-        |> Async.RunSynchronously
+        let docRef = 
+            collection.AddAsync(data)
+            |> Async.AwaitTask
+            |> Async.RunSynchronously
+
+        data |> setFirestoreProperties docRef.Id docRef.Parent.Id |> ignore
+        docRef
 
     /// Sets a document content with a given ID in a given collection.
     let internal setDoc id data (collection: CollectionReference) =
@@ -105,3 +113,43 @@ module internal Utils =
             |> Async.AwaitTask
             |> Async.RunSynchronously
             |> ignore
+
+    /// Returns a query snapshot with respect to the given transaction
+    let internal getQuerySnapshotInTrans (trans: Transaction) (query: Query) =
+        trans.GetSnapshotAsync(query)
+        |> Async.AwaitTask
+        |> Async.RunSynchronously
+
+    /// Returns a document snapshot with respect to the given transaction.
+    let internal getDocSnapshotInTrans (trans: Transaction) (doc: DocumentReference) =
+        trans.GetSnapshotAsync(doc)
+        |> Async.AwaitTask
+        |> Async.RunSynchronously
+
+    /// Returns all document snapshot with respect to the given transaction.
+    let internal getDocSnapshotsInTrans (trans: Transaction) (docs: DocumentReference seq) =
+        trans.GetAllSnapshotsAsync(docs)
+        |> Async.AwaitTask
+        |> Async.RunSynchronously
+
+    /// Creates a document with a given ID in a given collection with respect to the given transaction.
+    let internal createDocInTrans (trans: Transaction) id data (collection: CollectionReference) =
+        let docRef = collection.Document(id)
+        
+        trans.Create(docRef, data)
+
+        docRef
+
+    /// Sets a document content with a given ID in a given collection.
+    let internal setDocInTrans (trans: Transaction) id data (collection: CollectionReference) =
+        let docRef = getDoc id collection
+
+        trans.Set(docRef, data, SetOptions.MergeAll)
+
+        docRef
+
+    /// Deletes a document with a given ID in a given collection with respect to the given transaction.
+    let internal deleteDocTrans (trans: Transaction) (precondition: Precondition option) id (collection: CollectionReference) =
+        match precondition with
+        | Some precon -> trans.Delete((getDoc id collection), precon)
+        | None -> trans.Delete(getDoc id collection)
