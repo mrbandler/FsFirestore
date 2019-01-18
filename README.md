@@ -181,7 +181,7 @@ Transactions are functions which take in a `Transaction` object to create, read,
 open Google.Cloud.Firestore
 open FsFirestore.Transaction
 
-// Reading a document works just as aspected only with the minor difference
+// Reading a document works just as expected only with the minor difference
 // to use the transaction specific function from the Transaction module.
 let transactionFunc (trans: Transaction) =
 	documentInTrans<Address> trans "addresses" "POTUS-address"
@@ -266,7 +266,7 @@ runTransaction transactionFunc
 let transactionFunc (trans: Transaction) =
     let timeStamp = Timestamp.FromDateTime(DateTime.Today)
     let precondition = Precondition.LastUpdated(timeStamp)
-    deleteDocument precondition "addresses" "POTUS-address"
+    deleteDocumentInTrans trans precondition "addresses" "POTUS-address"
     
 runTransaction transactionFunc
 ```
