@@ -2,6 +2,7 @@
 
 # FsFirestore 
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/643d2cf6f9b844de99adc4e77bef4962)](https://app.codacy.com/app/mrbandler/FsFirestore?utm_source=github.com&utm_medium=referral&utm_content=mrbandler/FsFirestore&utm_campaign=Badge_Grade_Dashboard)
 [![pipeline status](https://gitlab.com/mrbandler/FsFirestore/badges/master/pipeline.svg)](https://gitlab.com/mrbandler/FsFirestore/commits/master) [![NuGet Badge](https://buildstats.info/nuget/FsFirestore?includePreReleases=true)](https://www.nuget.org/packages/FsFirestore)
 
 **Functional F# library to access Firestore database hosted on Google Cloud Platform (GCP) or Firebase.**
