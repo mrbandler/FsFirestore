@@ -2,7 +2,7 @@
 
 # FsFirestore 
 
-[![pipeline status](https://gitlab.com/mrbandler/FsFirestore/badges/master/pipeline.svg)](https://gitlab.com/mrbandler/FsFirestore/commits/master) [![NuGet Badge](https://buildstats.info/nuget/FsFirestore?includePreReleases=true)](https://www.nuget.org/packages/FsFirestore)
+[![pipeline status](https://gitlab.com/mrbandler/FsFirestore/badges/master/pipeline.svg)](https://gitlab.com/mrbandler/FsFirestore/commits/master) [![NuGet Badge](https://buildstats.info/nuget/FsFirestore?includePreReleases=true)](https://www.nuget.org/packages/FsFirestore) [![Donate with Bitcoin](https://en.cryptobadges.io/badge/micro/3KGsDx52prxWciBkfNJYBkXaTJ6GUURP2c)](https://en.cryptobadges.io/donate/3KGsDx52prxWciBkfNJYBkXaTJ6GUURP2c) [![Donate with Litecoin](https://en.cryptobadges.io/badge/micro/LcHsJH13A8PmHJQwpbWevGUebZwhWNMXgS)](https://en.cryptobadges.io/donate/LcHsJH13A8PmHJQwpbWevGUebZwhWNMXgS) [![Donate with Ethereum](https://en.cryptobadges.io/badge/micro/0xd6Ffc89Bc87f7dFdf0ef1aefF956634d4B7451c8)](https://en.cryptobadges.io/donate/0xd6Ffc89Bc87f7dFdf0ef1aefF956634d4B7451c8) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/mrbandler/)
 
 **Functional F# library to access Firestore database hosted on Google Cloud Platform (GCP) or Firebase.**
 
@@ -430,6 +430,8 @@ If you like you can buy me a coffee:
 [![Support via PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://www.paypal.me/mrbandler/)
 
 [![Donate with Bitcoin](https://en.cryptobadges.io/badge/big/3KGsDx52prxWciBkfNJYBkXaTJ6GUURP2c)](https://en.cryptobadges.io/donate/3KGsDx52prxWciBkfNJYBkXaTJ6GUURP2c)
+
+[![Donate with Litecoin](https://en.cryptobadges.io/badge/big/LcHsJH13A8PmHJQwpbWevGUebZwhWNMXgS)](https://en.cryptobadges.io/donate/LcHsJH13A8PmHJQwpbWevGUebZwhWNMXgS)
 
 [![Donate with Ethereum](https://en.cryptobadges.io/badge/big/0xd6Ffc89Bc87f7dFdf0ef1aefF956634d4B7451c8)](https://en.cryptobadges.io/donate/0xd6Ffc89Bc87f7dFdf0ef1aefF956634d4B7451c8)
 
