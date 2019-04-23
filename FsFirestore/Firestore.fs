@@ -65,6 +65,22 @@ module Firestore =
         collection col
         |> getDocs ids
 
+    /// Returns a document snapshot from a collection.
+    let documentSnapshot col id =
+        collection col
+        |> getDoc id
+        |> getDocSnapshot
+
+    /// Returns a list of document snapshots from a collection.
+    let documentSnapshots col ids =
+        collection col
+        |> getDocs ids
+        |> Seq.map (fun doc -> doc |> getDocSnapshot)
+
+    /// Returns a document snapshot from a given documen reference.
+    let documentSnapshotFromRef doc =
+        getDocSnapshot doc
+
     /// Returns a document from a collection.
     let document<'T when 'T : not struct> col id =
         documentRef col id
