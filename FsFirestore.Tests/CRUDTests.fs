@@ -187,3 +187,29 @@ module CRUDTests =
 
         // Tear down.
         // Nothing to do here.
+
+    [<Fact>]
+    let ``Check if a document exists (added)`` () =
+        // Build up.
+        connectToFirestore findGCPAuthentication |> ignore
+        let doc = addDocument CRUDCollection None (new Test())
+        let docData = convertTo<Test> doc
+
+        // Test.
+        let docSnap = documentSnapshot docData.CollectionId docData.Id
+        Assert.True(docSnap.Exists)
+
+        // Tear down.
+        deleteDocument None docData.Id docData.CollectionId
+
+    [<Fact>]
+    let ``Check if a document exists (not added)`` () =
+        // Build up.
+        connectToFirestore findGCPAuthentication |> ignore
+
+        // Test.
+        let docSnap = documentSnapshot "4" "2"
+        Assert.False(docSnap.Exists)
+
+        // Tear down.
+        // Nothing to do here.
