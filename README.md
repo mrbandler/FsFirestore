@@ -95,6 +95,15 @@ let address = convertTo<Address> addressRef
 // you can use these features.
 let docId = address.Id // => "POTUS-address""
 let collectionId = address.CollectionId // => "addresses""
+
+// --- or to check if a document exists ---
+
+// Let's retrieve a document snapshot.
+let addressSnap = documentSnapshot "addresses" "POTUS-address"
+
+// Then you can check if a snapshot exists.
+let exists = addressSnap.Exists // => true, false
+
 ```
 
 #### Querying Documents
