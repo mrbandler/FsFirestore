@@ -336,7 +336,7 @@ let callback (snap: DocumentSnapshot) =
 			updateDocument score.CollectionId score.Ids score		
 		
 // Now we can simple mount our created listener callback and in 
-// turn receive a istener object from Firestore
+// turn receive a listener object from Firestore
 let listener = listenOnDocument "scores" "mrbandler" callback
 
 // If we want to stop listening we just stop listening.
@@ -358,9 +358,9 @@ let callback (querySnap: QuerySnapshot) =
 	
 	// Now we can extract the usernames from the scores into an array.
 	let usernames =
-        scores
-        |> List.map (fun score -> score.Id)
-        |> Array.ofList
+		scores
+		|> List.map (fun score -> score.Id)
+		|> Array.ofList
 	
 	// Let's update our highscores document with the new usernames.
 	let highScores = document<HighScores> "highscores" "users"
@@ -394,18 +394,18 @@ let callback (querySnap: QuerySnapshot) =
 	let scoreChanges = convertQueryChanges<Score> querySnap.Changes |> List.ofSeq
 	
 	// A document change contains a bit more data then a usual document
-    let scoreChange = List.item 0
-    let doc = scoreChange.document // => Actuall converted document data
-    let changeType = scoreChange.changeType // => Added (there also is Updated and Removed)
-    let newIndex = scoreChange.newIndex // => New index (option) if moved in the query
-    let oldIndex = scoreChange.oldIndex // => Old index (option) if moved in the query
+	let scoreChange = List.item 0
+	let doc = scoreChange.document           // => Actuall converted document data
+ 	let changeType = scoreChange.changeType  // => Added (there also is Updated and Removed)
+ 	let newIndex = scoreChange.newIndex      // => New index (option) if moved in the query
+	let oldIndex = scoreChange.oldIndex      // => Old index (option) if moved in the query
 	
 	// Now we can extract the usernames from the scores into an array.
 	let usernames =
-        scoreChanges
-        |> List.filter (fun scoreChange -> scoreChange.changeType = DocumentChange.Type.Added)
-        |> List.map (fun scoreChange -> scoreChange.document.Id)
-        |> Array.ofList
+		scoreChanges
+		|> List.filter (fun scoreChange -> scoreChange.changeType = DocumentChange.Type.Added)
+		|> List.map (fun scoreChange -> scoreChange.document.Id)
+		|> Array.ofList
 	
 	// Let's update our highscores document with the new usernames.
 	let highScores = document<HighScores> "highscores" "users"
@@ -423,10 +423,6 @@ let listener =
 // If we want to stop listening we just stop listening.
 stopListening listener
 ```
-
-### Async Functions
-
-> **TODO:** The async API will be added soon... Stay tuned!
 
 ## 2. Bugs and Features
 
