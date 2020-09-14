@@ -15,7 +15,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.8
+          dotnet-version: "3.1.x"
 
       - name: Restore and build
         run: |
@@ -40,7 +40,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.8
+          dotnet-version: "3.1.x"
 
       - name: Restore and test
         run: |
@@ -66,7 +66,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.8
+          dotnet-version: "3.1.x"
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }}
 

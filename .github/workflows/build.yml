@@ -16,7 +16,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.8
+          dotnet-version: "3.1.x"
 
       - name: Restore and build
         run: |
@@ -41,7 +41,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.8
+          dotnet-version: "3.1.x"
 
       - name: Restore and test
         run: |
