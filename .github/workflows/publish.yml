@@ -51,4 +51,4 @@ jobs:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }}
 
       - name: Publish to nuget
-        run: dotnet nuget push ./package/*.nupkg
+        run: dotnet nuget push ./package/*.nupkg -k $NUGET_AUTH_TOKEN -s nuget.org
