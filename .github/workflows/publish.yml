@@ -30,33 +30,8 @@ jobs:
           name: FsFirestore-artifacts
           path: package
 
-  tests:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone repo
-        uses: actions/checkout@v2
-
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: "3.1.x"
-
-      - name: Setup service account
-        shell: bash
-        env:
-          GCP: ${{ secrets.GCP }}
-        run: echo $GCP > ./GCP.json
-
-      - name: Restore and test
-        run: |
-          dotnet restore
-          dotnet build
-          cd FsFirestore.Tests
-          dotnet test
-
   publish:
-    needs: tests
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Clone repo
@@ -77,4 +52,4 @@ jobs:
 
       - name: Publish to nuget
         run: /
-          dotnet nuget push ../package/*.nupkg
+          dotnet nuget push ./package/*.nupkg
