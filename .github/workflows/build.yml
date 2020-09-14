@@ -1,0 +1,52 @@
+name: build
+
+on:
+  push:
+    branches: [master, develop]
+  pull_request:
+    branches: [master, develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.8
+
+      - name: Restore and build
+        run: |
+          dotnet restore
+          dotnet build -c Release
+          cd FsFirestore
+          dotnet pack -c Release -o ../package
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: FsFirestore-artifacts
+          path: package
+
+  tests:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.8
+
+      - name: Restore and test
+        run: |
+          echo ${{ secrets.NUGET_API_KEY }} > ./GCP.json
+          dotnet restore
+          dotnet build
+          cd FsFirestore.Tests
+          dotnet test

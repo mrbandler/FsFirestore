@@ -2,7 +2,13 @@
 
 # FsFirestore 
 
-[![pipeline status](https://gitlab.com/mrbandler/FsFirestore/badges/master/pipeline.svg)](https://gitlab.com/mrbandler/FsFirestore/commits/master) [![NuGet Badge](https://buildstats.info/nuget/FsFirestore?includePreReleases=true)](https://www.nuget.org/packages/FsFirestore) [![Donate with Bitcoin](https://en.cryptobadges.io/badge/micro/3KGsDx52prxWciBkfNJYBkXaTJ6GUURP2c)](https://en.cryptobadges.io/donate/3KGsDx52prxWciBkfNJYBkXaTJ6GUURP2c) [![Donate with Litecoin](https://en.cryptobadges.io/badge/micro/LcHsJH13A8PmHJQwpbWevGUebZwhWNMXgS)](https://en.cryptobadges.io/donate/LcHsJH13A8PmHJQwpbWevGUebZwhWNMXgS) [![Donate with Ethereum](https://en.cryptobadges.io/badge/micro/0xd6Ffc89Bc87f7dFdf0ef1aefF956634d4B7451c8)](https://en.cryptobadges.io/donate/0xd6Ffc89Bc87f7dFdf0ef1aefF956634d4B7451c8) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/mrbandler/)
+[![Action status](https://github.com/mrbandler/FsFirestore/workflows/build/badge.svg)](https://github.com/mrbandler/FsFirestore/actions) 
+[![NuGet Badge](https://buildstats.info/nuget/FsFirestore?includePreReleases=true)](https://www.nuget.org/packages/FsFirestore) 
+
+[![Donate with Bitcoin](https://en.cryptobadges.io/badge/micro/3LTBGYAHQCDE4ZbEiTreJjzgnsDhY6X2D2)](https://en.cryptobadges.io/donate/3LTBGYAHQCDE4ZbEiTreJjzgnsDhY6X2D2)
+[![Donate with Litecoin](https://en.cryptobadges.io/badge/micro/LcHsJH13A8PmHJQwpbWevGUebZwhWNMXgS)](https://en.cryptobadges.io/donate/LcHsJH13A8PmHJQwpbWevGUebZwhWNMXgS)
+[![Donate with Ethereum](https://en.cryptobadges.io/badge/micro/0x54499ee409687E9C43589693093D004a0cbfEE72)](https://en.cryptobadges.io/donate/0x54499ee409687E9C43589693093D004a0cbfEE72)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/mrbandler/)
 
 **Functional F# library to access Firestore database hosted on Google Cloud Platform (GCP) or Firebase.**
 
@@ -12,7 +18,7 @@
 3. [Buy me a coffee](#3-buy-me-a-coffee) ☕
 4. [License](#4-license) 📃
 
----
+---~~~~
 
 ## 1. Usage
 
@@ -24,6 +30,16 @@ To use any of the Firestore features you have to initialize the connection via a
 open FsFirestore.Firestore
 
 let didConnect = connectToFirestore "./path/to/your/service_account.json"
+```
+
+**OR**
+
+Set the path to your service account JSON to the environment variable `GOOGLE_APPLICATION_CREDENTIALS` and use your project ID to connect.
+
+```fsharp
+open FsFirestore.Firestore
+
+let didConnect = connectToFirestore "your_project_id"
 ```
 
 The `connectToFirestore` function returns a boolean, to indicate whether the connection could be established.
@@ -429,11 +445,11 @@ If you like you can buy me a coffee:
 
 [![Support via PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://www.paypal.me/mrbandler/)
 
-[![Donate with Bitcoin](https://en.cryptobadges.io/badge/big/3KGsDx52prxWciBkfNJYBkXaTJ6GUURP2c)](https://en.cryptobadges.io/donate/3KGsDx52prxWciBkfNJYBkXaTJ6GUURP2c)
+[![Donate with Bitcoin](https://en.cryptobadges.io/badge/big/3LTBGYAHQCDE4ZbEiTreJjzgnsDhY6X2D2)](https://en.cryptobadges.io/donate/3LTBGYAHQCDE4ZbEiTreJjzgnsDhY6X2D2)
 
 [![Donate with Litecoin](https://en.cryptobadges.io/badge/big/LcHsJH13A8PmHJQwpbWevGUebZwhWNMXgS)](https://en.cryptobadges.io/donate/LcHsJH13A8PmHJQwpbWevGUebZwhWNMXgS)
 
-[![Donate with Ethereum](https://en.cryptobadges.io/badge/big/0xd6Ffc89Bc87f7dFdf0ef1aefF956634d4B7451c8)](https://en.cryptobadges.io/donate/0xd6Ffc89Bc87f7dFdf0ef1aefF956634d4B7451c8)
+[![Donate with Ethereum](https://en.cryptobadges.io/badge/big/0x54499ee409687E9C43589693093D004a0cbfEE72)](https://en.cryptobadges.io/donate/0x54499ee409687E9C43589693093D004a0cbfEE72)
 
 ---
 

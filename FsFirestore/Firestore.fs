@@ -20,6 +20,10 @@ module Firestore =
 
             | None -> 
                 false
+                
+    // Initializes the firestore connection using a project ID.
+    let connectToFirestoreProject projectId =
+        db <- FirestoreDb.Create(projectId)
 
     /// Converts a given document snapshot to a given type.
     let convertSnapshotTo<'T when 'T : not struct> (snap: DocumentSnapshot) =
