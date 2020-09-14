@@ -47,8 +47,9 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: "3.1.x"
+          source-url: https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }}
 
       - name: Publish to nuget
-        run: dotnet nuget push ./package/*.nupkg -k $NUGET_AUTH_TOKEN -s nuget.org
+        run: dotnet nuget push ./package/*.nupkg
