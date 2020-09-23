@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Version>1.1.14/Version>
+    <Version>1.1.14</Version>
     <Authors>fivefingergames</Authors>
     <Company>fivefingergames</Company>
     <Description>Functional F# library to access Firestore database via Google Cloud Platform (GCP) or Firebase Project.</Description>
