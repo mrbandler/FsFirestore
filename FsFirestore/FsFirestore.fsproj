@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Version>1.1.18</Version>
+    <Version>1.1.19</Version>
     <Authors>fivefingergames</Authors>
     <Company>fivefingergames</Company>
     <Description>Functional F# library to access Firestore database via Google Cloud Platform (GCP) or Firebase Project.</Description>
@@ -12,7 +12,7 @@
     <RepositoryType>Git</RepositoryType>
     <PackageTags>fsfirestore, fs, firestore, FsFirestore, gcp, google, cloud, platform, firebase, fire, base, fire, store, fsharp</PackageTags>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <PackageVersion>1.1.18</PackageVersion>
+    <PackageVersion>1.1.19</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Env.fs" />
