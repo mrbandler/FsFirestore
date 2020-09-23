@@ -20,6 +20,7 @@ jobs:
       - name: Restore and build
         run: |
           dotnet restore
+          dotnet build
           cd FsFirestore
           dotnet pack -c Release -o ../package
 
