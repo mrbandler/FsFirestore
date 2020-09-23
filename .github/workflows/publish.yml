@@ -20,7 +20,6 @@ jobs:
       - name: Restore and build
         run: |
           dotnet restore
-          dotnet build -c Release
           cd FsFirestore
           dotnet pack -c Release -o ../package
 
@@ -47,9 +46,11 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: "3.1.x"
+          source-url: https://api.nuget.org/v3/index.json
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
       - name: Publish to nuget
         run: |
-          dotnet nuget push ./package/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
+          cp ./package/FsFirestore*.nupkg FsFirestore.nupkg
+          dotnet nuget push "*.nupkg -k $NUGET_API_KEY -s https://api.nuget.org/v3/index.json
