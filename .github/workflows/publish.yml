@@ -53,4 +53,4 @@ jobs:
       - name: Publish to nuget
         run: |
           cp ./package/FsFirestore*.nupkg FsFirestore.nupkg
-          dotnet nuget push "*.nupkg -k $NUGET_API_KEY -s https://api.nuget.org/v3/index.json
+          dotnet nuget push "*.nupkg" -k $NUGET_API_KEY -s https://api.nuget.org/v3/index.json
