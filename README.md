@@ -38,7 +38,7 @@ let connected = connectToFirestore "./path/to/your/service_account.json"
 
 The `connectToFirestore` function returns a boolean, to indicate whether the connection could be established.
 
-#### 1. Project ID
+#### 2. Project ID
 
 Set the path to your service account JSON to the environment variable `GOOGLE_APPLICATION_CREDENTIALS` and use your project ID to connect.
 
@@ -95,7 +95,7 @@ let connect () =
     builder |> connectToFirestoreWithBuilder "./path/to/your/service_account.json"
 ```
 
-#### 1. DB Builder Only
+#### 4. DB Builder Only
 
 Set the path to your service account JSON to the environment variable `GOOGLE_APPLICATION_CREDENTIALS` and use your project ID to connect.
 
