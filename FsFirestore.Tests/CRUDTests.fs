@@ -18,7 +18,7 @@ module CRUDTests =
     let ``Add document with generated ID`` () =
         // Build up.
         connectToFirestore findGCPAuthentication |> ignore
-        let testData = new Test()
+        let testData = Test ()
 
         // Test.
         let doc = addDocument CRUDCollection None testData

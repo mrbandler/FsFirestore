@@ -15,6 +15,7 @@
     <Compile Include="CRUDTests.fs" />
     <Compile Include="TransactionTests.fs" />
     <Compile Include="ListeningTests.fs" />
+    <Compile Include="ConverterTests.fs" />
   </ItemGroup>
 
   <ItemGroup>

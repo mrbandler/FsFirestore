@@ -4,7 +4,7 @@ module internal Utils =
     
     open Google.Cloud.Firestore
     open FsFirestore.Types
-
+    
     /// Sets Firestore properties on a given data object if it inherits from FirestoreDocument.
     let internal setFirestoreProperties id col data =
         match box data with

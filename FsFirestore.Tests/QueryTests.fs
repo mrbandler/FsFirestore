@@ -12,7 +12,7 @@ module QueryTests =
     [<Theory>]
     [<InlineData(10)>]
     [<InlineData(15)>]
-    let `` Query documents with 'end at'`` (numOfDocs) =
+    let ``Query documents with 'end at'`` (numOfDocs) =
         // Build up.
         connectToFirestore findGCPAuthentication |> ignore
 
