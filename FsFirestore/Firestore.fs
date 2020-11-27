@@ -35,7 +35,7 @@ module Firestore =
             | None -> 
                 false
         
-    /// Initializes the firestore connection with a custom builder.    
+    /// Initializes the firestore connection with a custom builder.     
     let connectToFirestoreWithBuilderOnly (builder: FirestoreDbBuilder) =        
         db <- builder.Build ()
 
