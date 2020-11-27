@@ -20,9 +20,12 @@ module Config =
     /// Collection ID used for the transaction tests.
     [<Literal>]
     let ListenCollection = "listen-tests"
+    
+        /// Collection ID used for the transaction tests.
+    [<Literal>]
+    let ConverterCollection = "converter-tests"
             
     /// Finds GCP authentication path.
     let findGCPAuthentication =
         let solutionPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../.."))
         Path.Combine(solutionPath, "GCP.json")
-

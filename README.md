@@ -1,9 +1,9 @@
 <img src="https://raw.githubusercontent.com/mrbandler/FsFirestore/master/Icons/FsFirestoreTransparentBanner.png" alt="FsFirestore Icon Banner" width="150" height="110"/>
 
-# FsFirestore 
+# FsFirestore
 
-[![Action status](https://github.com/mrbandler/FsFirestore/workflows/build/badge.svg)](https://github.com/mrbandler/FsFirestore/actions) 
-[![NuGet Badge](https://buildstats.info/nuget/FsFirestore?includePreReleases=true)](https://www.nuget.org/packages/FsFirestore) 
+[![Action status](https://github.com/mrbandler/FsFirestore/workflows/build/badge.svg)](https://github.com/mrbandler/FsFirestore/actions)
+[![NuGet Badge](https://buildstats.info/nuget/FsFirestore?includePreReleases=true)](https://www.nuget.org/packages/FsFirestore)
 
 [![Donate with Bitcoin](https://en.cryptobadges.io/badge/micro/3LTBGYAHQCDE4ZbEiTreJjzgnsDhY6X2D2)](https://en.cryptobadges.io/donate/3LTBGYAHQCDE4ZbEiTreJjzgnsDhY6X2D2)
 [![Donate with Litecoin](https://en.cryptobadges.io/badge/micro/LcHsJH13A8PmHJQwpbWevGUebZwhWNMXgS)](https://en.cryptobadges.io/donate/LcHsJH13A8PmHJQwpbWevGUebZwhWNMXgS)
@@ -18,7 +18,7 @@
 3. [Buy me a coffee](#3-buy-me-a-coffee) ☕
 4. [License](#4-license) 📃
 
----~~~~
+---
 
 ## 1. Usage
 
@@ -26,23 +26,88 @@
 
 To use any of the Firestore features you have to initialize the connection via a Service Account JSON (either for [Firebase](https://console.firebase.google.com/project/_/settings/serviceaccounts/adminsdk) or [GCP](https://cloud.google.com/docs/authentication/getting-started)).
 
+There are four ways to connect to your Firestore instance.
+
+#### 1. Service Account JSON Path
+
 ```fsharp
 open FsFirestore.Firestore
 
-let didConnect = connectToFirestore "./path/to/your/service_account.json"
+let connected = connectToFirestore "./path/to/your/service_account.json"
 ```
 
-**OR**
+The `connectToFirestore` function returns a boolean, to indicate whether the connection could be established.
+
+#### 1. Project ID
 
 Set the path to your service account JSON to the environment variable `GOOGLE_APPLICATION_CREDENTIALS` and use your project ID to connect.
 
 ```fsharp
 open FsFirestore.Firestore
 
-let didConnect = connectToFirestore "your_project_id"
+connectToFirestoreProject "your_project_id"
 ```
 
-The `connectToFirestore` function returns a boolean, to indicate whether the connection could be established.
+#### 3. Service Account JSON Path & DB Builder
+
+Use a DB builder to connect, this lets you specify additional settings such as Custom Converters (example below).
+
+```fsharp
+open FsFirestore.Firestore
+open Google.Cloud.Firestore
+
+// Player ID.
+type PlayerId (id: string) =
+    let id = id
+    member this.Id with get () = id
+
+// Custom player ID converter.
+type PlayerIdConverter () =
+    interface IFirestoreConverter<PlayerId> with
+
+    member this.ToFirestore value = value.Id :> obj
+
+    member this.FromFirestore value =
+        match value with
+        | :? string as id -> PlayerId id
+        | _ -> PlayerId ""
+
+// Use custom type with custom converter.
+[<FirestoreData>]
+type Game () =
+    inherit FirestoreDocument()
+
+    [<FirestoreProperty>]
+    member val PlayerA = PlayerId "0"
+
+    [<FirestoreProperty>]
+    member val PlayerB = PlayerId "1"
+
+// connect :: Unit -> Boolean
+let connect () =
+    let converter = PlayerIdConverter ()
+    let registry = ConverterRegistry ()
+    registry.Add converter
+
+    let builder = FirestoreDbBuilder ()
+    builder.ConverterRegistry <- registry
+
+    builder |> connectToFirestoreWithBuilder "./path/to/your/service_account.json"
+```
+
+#### 1. DB Builder Only
+
+Set the path to your service account JSON to the environment variable `GOOGLE_APPLICATION_CREDENTIALS` and use your project ID to connect.
+
+```fsharp
+open FsFirestore.Firestore
+open Google.Cloud.Firestore
+
+let builder = FirestoreDbBuilder ()
+builder.ProjectId <- "your_project_id"
+
+builder |> connectToFirestoreWithBuilderOnly
+```
 
 ### Create, Read, Update and Delete (CRUD)
 
@@ -58,24 +123,24 @@ open FsFirestore.Types
 
 [<FirestoreData>]
 type Address() =
-	inherit FirestoreDocument() // Base class that comes with FsFirestore
-	
-	[<FirestoreProperty>]
-	member val Street = "Pennsylvania Avenue" with get, set
+    inherit FirestoreDocument() // Base class that comes with FsFirestore
 
-	[<FirestoreProperty>]
-	member val HouseNo = 1600 with get, set
-	
-	[<FirestoreProperty>]
-	member val City = "Washington" with get, set
-	
-	[<FirestoreProperty>]
-	member val State = "DC" with get, set
+    [<FirestoreProperty>]
+    member val Street = "Pennsylvania Avenue" with get, set
+
+    [<FirestoreProperty>]
+    member val HouseNo = 1600 with get, set
+
+    [<FirestoreProperty>]
+    member val City = "Washington" with get, set
+
+    [<FirestoreProperty>]
+    member val State = "DC" with get, set
 
 // Because of the inheritance we now have some niffty features in this straight forward model class.
 let address = new Address()
 
-// We can retrieve all fields in a object list, 
+// We can retrieve all fields in a object list,
 // which can later be used to query Firestore.
 let fields = address.AllFields // => ["Pennsylvania Avenue"; 1600; "Washington"; "DC"]
 let specificField = address.Fields("HouseNo", "City") // => [1600; "Washington"]
@@ -91,7 +156,7 @@ let collectionId = address.CollectionId
 open Google.Cloud.Firestore
 open FsFirestore.Firestore
 
-// Let's read an address from Firestore and 
+// Let's read an address from Firestore and
 // automatically convert it to our model.
 let address = document<Address> "addresses" "POTUS-address"
 
@@ -134,7 +199,7 @@ let queryCollection = collection "addresses"
 
 // Now we can chain conditions.
 // Let's query all addresses in Pennsylvania Avenue, DC up to POTUS's one.
-let addresses = 
+let addresses =
     queryCollection
     |> orderBy "HouseNo"
     |> whereEqualTo "State" "DC"
@@ -153,7 +218,7 @@ open FsFirestore.Firestore
 // Let's create the model that we want to add to Firestore
 let address = new Address()
 
-// Now we can add the address to Firestore with a given 
+// Now we can add the address to Firestore with a given
 // collection name and ID.
 let docRef = addDocument "addresses" (Some "POTUS-address") address
 
@@ -168,7 +233,7 @@ let docRef = addDocument "addresses" None address
 ```fsharp
 open FsFirestore.Firestore
 
-// We can first the read the document we want to update 
+// We can first the read the document we want to update
 // from Firestore.
 let address = document<Address> "addresses" "POTUS-address"
 
@@ -210,7 +275,7 @@ open FsFirestore.Transaction
 // to use the transaction specific function from the Transaction module.
 let transactionFunc (trans: Transaction) =
 	documentInTrans<Address> trans "addresses" "POTUS-address"
-	
+
 // Now let's run the transaction.
 // Notice that the transaction will return the return value from the actual transaction
 // function.
@@ -232,13 +297,13 @@ open FsFirestore.Transaction
 // Let's create the model that we want to add to Firestore
 let address = new Address()
 
-// Now let's write a transaction to add an address to Firestore with a given 
+// Now let's write a transaction to add an address to Firestore with a given
 // collection name and ID.
 let transactionFunc (trans: Transaction) =
 	addDocumentInTrans trans "addresses" (Some "POTUS-address") address
-	
+
 // Let's run the transaction.
-let docRef = runTransaction transactionFunc 
+let docRef = runTransaction transactionFunc
 
 // -- or --
 
@@ -255,16 +320,16 @@ open FsFirestore.Firestore
 
 // Let's create our update transaction.
 let transactionFunc (trans: Transaction) =
-    // We can first read the document we want to update 
+    // We can first read the document we want to update
     // from Firestore.
 	let address = documentInTrans<Address> trans "addresses" "POTUS-address"
-	
+
     // Now let's move the presidents house number along one number.
     address.HouseNo <- 1601
 
     // And update the document.
     updateDocumentInTrans trans "addresses" "POTUS-address" address
-    
+
 // Let's run the transaction.
 let docRef = runTransaction transactionFunc
 ```
@@ -280,19 +345,19 @@ let transactionFunc (trans: Transaction) =
     // To delete a document we simply need the collection ID
     // and the document ID.
 	deleteDocumentInTrans trans None "addresses" "POTUS-address"
-	
+
 // Let's run the transaction.
 runTransaction transactionFunc
 
 // -- or --
 
-// As mentioned in the CRUD section we can also specify a precondition 
+// As mentioned in the CRUD section we can also specify a precondition
 // for the deletion process.
 let transactionFunc (trans: Transaction) =
     let timeStamp = Timestamp.FromDateTime(DateTime.Today)
     let precondition = Precondition.LastUpdated(timeStamp)
     deleteDocumentInTrans trans precondition "addresses" "POTUS-address"
-    
+
 runTransaction transactionFunc
 ```
 
@@ -314,19 +379,19 @@ open FsFirestore.Types
 [<FirestoreData>]
 type Score() =
 	inherit FirestoreDocument() // Base class that comes with FsFirestore
-	
+
 	[<FirestoreProperty>]
 	member val BestScore = 0 with get, set
 
 	[<FirestoreProperty>]
 	member val LastScore = 0 with get, set
-	
+
 // Stores a list of usernames that have high scores.
 // A highscore is any score above 1000.
 [<FirestoreData>]
 type HighScores() =
 	inherit FirestoreDocument() // Base class that comes with FsFirestore
-	
+
 	[<FirestoreProperty>]
 	member val Usernames = [] with get, set
 ```
@@ -344,14 +409,14 @@ let callback (snap: DocumentSnapshot) =
 		// The callback takes in a document snapshot, we can convert the snap
 		// to our model.
 		let score = convertSnapshotTo<Score> snap
-		
+
 		// Now we can use the listener to set the best score to the last score
 		// if it was better then the current best score.
 		if score.LastScore > score.BestScore then
 			score.BestScore <- score.LastScore
-			updateDocument score.CollectionId score.Ids score		
-		
-// Now we can simple mount our created listener callback and in 
+			updateDocument score.CollectionId score.Ids score
+
+// Now we can simple mount our created listener callback and in
 // turn receive a listener object from Firestore
 let listener = listenOnDocument "scores" "mrbandler" callback
 
@@ -365,25 +430,25 @@ stopListening listener
 open FsFirestore.Firestore
 open FsFirestore.Listening
 
-// Now we can use a listener to update a different document with the 
+// Now we can use a listener to update a different document with the
 // best high scores.
 let callback (querySnap: QuerySnapshot) =
 	// If the query changes the callback is called and we can retrieve the
 	// updated query results.
 	let scores = convertSnapshotsTo<Score> querySnap.Documents |> List.ofSeq
-	
+
 	// Now we can extract the usernames from the scores into an array.
 	let usernames =
 		scores
 		|> List.map (fun score -> score.Id)
 		|> Array.ofList
-	
+
 	// Let's update our highscores document with the new usernames.
 	let highScores = document<HighScores> "highscores" "users"
 	highScores.Usernames <- usernames
-	
+
 	updateDocument highScores.CollectionId highScores.Id highScores
-	
+
 // Now let's mount our created listener callback to a query.
 // We only want highscores that are above 1000, to be neat we also order them.
 let listener =
@@ -402,32 +467,32 @@ In the above example we a simply retrieving all documents from the query which c
 open FsFirestore.Firestore
 open FsFirestore.Listening
 
-// Now we can use a listener to update a different document with the 
+// Now we can use a listener to update a different document with the
 // best high scores.
 let callback (querySnap: QuerySnapshot) =
 	// If the query changes the callback is called and we can retrieve the
 	// updated query results.
 	let scoreChanges = convertQueryChanges<Score> querySnap.Changes |> List.ofSeq
-	
+
 	// A document change contains a bit more data then a usual document
 	let scoreChange = List.item 0
 	let doc = scoreChange.document           // => Actuall converted document data
  	let changeType = scoreChange.changeType  // => Added (there also is Updated and Removed)
  	let newIndex = scoreChange.newIndex      // => New index (option) if moved in the query
 	let oldIndex = scoreChange.oldIndex      // => Old index (option) if moved in the query
-	
+
 	// Now we can extract the usernames from the scores into an array.
 	let usernames =
 		scoreChanges
 		|> List.filter (fun scoreChange -> scoreChange.changeType = DocumentChange.Type.Added)
 		|> List.map (fun scoreChange -> scoreChange.document.Id)
 		|> Array.ofList
-	
+
 	// Let's update our highscores document with the new usernames.
 	let highScores = document<HighScores> "highscores" "users"
 	Array.append highScores.Usernames usernames // Now instead of overwriting the all usernames we add to the array.
 	updateDocument highScores.CollectionId highScores.Id highScores
-	
+
 // Now let's mount our created listener callback to a query.
 // We only want highscores that are above 1000, to be neat we also order them.
 let listener =

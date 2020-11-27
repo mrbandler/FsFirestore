@@ -4,7 +4,6 @@ namespace FsFirestore
 module Firestore =    
 
     open Google.Cloud.Firestore
-    open FsFirestore.Types
     open FsFirestore.Env
     open FsFirestore.Utils
 
@@ -15,15 +14,30 @@ module Firestore =
     let connectToFirestore path =
         match setupGCPEnvironment path with
             | Some projectId ->
-                db <- FirestoreDb.Create(projectId)
+                db <- FirestoreDb.Create projectId
                 true
 
             | None -> 
                 false
                 
-    // Initializes the firestore connection using a project ID.
+    /// Initializes the firestore connection using a project ID.
     let connectToFirestoreProject projectId =
-        db <- FirestoreDb.Create(projectId)
+         db <- FirestoreDb.Create projectId
+         
+    /// Initializes the firestore connection with a custom builder.    
+    let connectToFirestoreWithBuilder path (builder: FirestoreDbBuilder) =        
+        match setupGCPEnvironment path with
+            | Some projectId ->
+                builder.ProjectId <- projectId
+                db <- builder.Build ()
+                true
+
+            | None -> 
+                false
+        
+    /// Initializes the firestore connection with a custom builder.     
+    let connectToFirestoreWithBuilderOnly (builder: FirestoreDbBuilder) =        
+        db <- builder.Build ()
 
     /// Converts a given document snapshot to a given type.
     let convertSnapshotTo<'T when 'T : not struct> (snap: DocumentSnapshot) =
