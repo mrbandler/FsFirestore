@@ -13,6 +13,7 @@ module Types =
         |> Seq.exists (fun x -> x.AttributeType = typeof<FirestorePropertyAttribute>)
 
     /// Abstract base class for easier interaction with the API.
+    [<AllowNullLiteral>]
     [<AbstractClass>]
     type FirestoreDocument() =
         member val Id = "" with get, set 
